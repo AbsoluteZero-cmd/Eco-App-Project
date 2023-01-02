@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animated_bottom_navigation_bar: ^1.1.0+1
+  carousel_slider: ^4.2.1
   flutter:
     sdk: flutter
 
