@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: kPrimaryColor,
-        accentColor: kSecondaryColor
+        accentColor: kSecondaryColor,
+        primarySwatch: Colors.deepOrange,
       ),
       home: StreamBuilder(
         stream: Auth().authStateChanges,
