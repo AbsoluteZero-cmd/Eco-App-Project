@@ -1,18 +1,20 @@
+import 'package:eco_app_project/auth/login_register_page.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:eco_app_project/auth/auth.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
-  final Future<FirebaseApp> _firebaseAuth = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
@@ -22,31 +24,16 @@ class MyApp extends StatelessWidget {
         primaryColor: kPrimaryColor,
         accentColor: kSecondaryColor
       ),
-      home: FutureBuilder(
-        future: _firebaseAuth,
+      home: StreamBuilder(
+        stream: Auth().authStateChanges,
         builder: (context, snapshot) {
-          if(snapshot.hasError){
-            return Text('Something gone wrong');
-          }
-          else if(snapshot.hasData){
-            FirebaseAuth.instance
-                .userChanges()
-                .listen((User? user) {
-              if (user == null) {
-                print('User is currently signed out!');
-              } else {
-                print('User is signed in!');
-              }
-            });
+          if (snapshot.hasData) {
             return Navigation();
-          }
-          else{
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+          } else {
+            return const LoginPage();
           }
         },
-      )
+      ),
     );
   }
 }
