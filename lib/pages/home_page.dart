@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:flutter/material.dart';
 
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
