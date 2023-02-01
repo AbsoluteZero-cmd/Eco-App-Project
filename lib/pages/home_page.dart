@@ -11,13 +11,13 @@ class HomePage extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 5.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(kBorderRadius * 0.5),
+            borderRadius: BorderRadius.circular(kBorderRadius),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(0, 2), // changes position of shadow
+                spreadRadius: 0.5,
+                blurRadius: 3,
+                offset: Offset(3, 3), // changes position of shadow
               ),
             ]
         ),

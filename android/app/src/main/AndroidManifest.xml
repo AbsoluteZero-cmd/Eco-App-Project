@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ecoapp.eco_app_project">
    <application
-        android:label="eco_app_project"
+        android:label="3Help"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
