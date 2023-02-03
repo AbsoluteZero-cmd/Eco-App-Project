@@ -41,13 +41,7 @@ class _NavigationState extends State<Navigation> {
   }
 
   Future<void> onButtonPress() async {
-    // await ref.set({
-    //   "name": "John",
-    //   "age": 18,
-    //   "address": {
-    //     "line1": "100 Mountain View"
-    //   }
-    // });
+
     //
     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //   content: Text("Database Updated!"),

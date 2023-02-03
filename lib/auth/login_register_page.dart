@@ -1,7 +1,9 @@
+import 'package:eco_app_project/auth/user_model.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:username_gen/username_gen.dart';
 import './auth.dart';
-import '../navigation.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = e.message;
       });
     }
-    print('My current user is logged in');
   }
 
   Future<void> createUserWithEmailAndPassword() async {
@@ -37,6 +38,14 @@ class _LoginPageState extends State<LoginPage> {
         email: _controllerEmail.text,
         password: _controllerPassword.text,
       );
+
+      String? uid = Auth().currentUser?.uid.toString();
+      DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
+      await ref.set({
+        "uid": uid,
+        "name": UsernameGen().generate(),
+        "score": 0,
+      });
 
     } on FirebaseAuthException catch (e) {
       setState(() {

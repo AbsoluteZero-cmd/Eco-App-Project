@@ -30,6 +30,8 @@ dependencies:
   animated_bottom_navigation_bar: ^1.1.0+1
   carousel_slider: ^4.2.1
 
+  username_gen: ^1.0.4
+
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.4
   firebase_database: ^10.0.9
