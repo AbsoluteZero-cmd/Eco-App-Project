@@ -2,9 +2,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   Widget historyCardBuilder(BuildContext context, int i) {
     return Container(
         width: MediaQuery.of(context).size.width,
@@ -79,7 +84,6 @@ class HomePage extends StatelessWidget {
               width: width,
               decoration: BoxDecoration(
                 color: kPrimaryColor,
-
               ),
 
               child: DefaultTextStyle(

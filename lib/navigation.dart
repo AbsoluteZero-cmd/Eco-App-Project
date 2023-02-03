@@ -4,6 +4,7 @@ import 'package:eco_app_project/pages/archive_page.dart';
 import 'package:eco_app_project/pages/home_page.dart';
 import 'package:eco_app_project/pages/map_page.dart';
 import 'package:eco_app_project/pages/settings_page.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 
@@ -16,6 +17,7 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int _bottomNavIndex = 0;
+  late DatabaseReference ref;
 
   final List<IconData> iconList = [
     Icons.home,
@@ -32,11 +34,32 @@ class _NavigationState extends State<Navigation> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref = FirebaseDatabase.instance.ref("users/123");
+  }
+
+  Future<void> onButtonPress() async {
+    // await ref.set({
+    //   "name": "John",
+    //   "age": 18,
+    //   "address": {
+    //     "line1": "100 Mountain View"
+    //   }
+    // });
+    //
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //   content: Text("Database Updated!"),
+    // ));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: pageList[_bottomNavIndex],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: onButtonPress,
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
