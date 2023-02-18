@@ -1,5 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eco_app_project/auth/auth.dart';
+import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,21 +14,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Widget historyCardBuilder(BuildContext context, int i) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
+    return Card(
         margin: EdgeInsets.symmetric(horizontal: 5.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(kBorderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0.5,
-                blurRadius: 3,
-                offset: Offset(3, 3), // changes position of shadow
-              ),
-            ]
-        ),
         child: Padding(
             padding: const EdgeInsets.all(kDefaultPadding * 0.5),
             child: Column(
@@ -65,12 +55,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> loadFromDB() async {
+    String? uid = Auth().currentUser?.uid.toString();
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('users/$uid/name').get();
+    if (snapshot.exists) {
+      print(snapshot.value);
+    } else {
+      print('No data available.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    final String userName = 'Aidana';
+    // loadFromDB();
+
+    final String userName = Auth().currentUser?.displayName ?? 'user';
     final int pointsCount = 13900;
     final int dayStreak = 4;
 
@@ -101,6 +104,7 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(width: double.infinity,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           RichText(
                             text: TextSpan(

@@ -5,4 +5,6 @@ class MyUser {
   final int score;
 
   MyUser(this.uid, this.name, this.score);
+
+  // String get name => name;
 }

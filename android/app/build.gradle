@@ -27,7 +27,7 @@ apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -75,4 +75,6 @@ dependencies {
 
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.yandex.android:maps.mobile:4.2.2-full'
 }

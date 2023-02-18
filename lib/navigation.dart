@@ -4,6 +4,7 @@ import 'package:eco_app_project/pages/archive_page.dart';
 import 'package:eco_app_project/pages/home_page.dart';
 import 'package:eco_app_project/pages/map_page.dart';
 import 'package:eco_app_project/pages/settings_page.dart';
+import 'package:eco_app_project/yandex_map/map_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class _NavigationState extends State<Navigation> {
 
   final List<Widget> pageList = [
     HomePage(),
-    MapPage(),
+    MapScreen(),
     ArchivePage(),
     SettingsPage()
   ];

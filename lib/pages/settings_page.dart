@@ -1,31 +1,155 @@
+import 'package:eco_app_project/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../auth/auth.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   SettingsPage({Key? key}) : super(key: key);
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
   final User? currentUser = Auth().currentUser;
+
+  late String username;
+  late String email;
+  late String phone;
+
+  @override
+  initState(){
+    super.initState();
+    username = currentUser?.displayName ?? 'no name';
+    email = currentUser?.email ?? 'no email';
+  }
 
   Future<void> signOut() async {
     await Auth().signOut();
   }
 
+  Widget SettingItem(String title, String val, bool isEmail){
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(kDefaultPadding * 0.5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title + ":",
+              style: TextStyle(
+                fontWeight: FontWeight.w600
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                _displayTextInputDialog(context, isEmail);
+              },
+              icon: Text(
+                '${val}',
+                style: TextStyle(
+                    color: Colors.black
+                ),
+              ),
+              label: Icon(Icons.edit)
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-            children: [
-              Text('settings'),
-              Text(currentUser?.email ?? 'User mail'),
-              ElevatedButton(
-                  onPressed: signOut,
-                  child: Text('Sign out')
-              )
-            ],
-          )
-      ),
+      body: Container(
+        margin: EdgeInsets.all(kDefaultPadding * 1.2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Settings',
+                  style: TextStyle(
+                      fontSize: kFontTitle
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.5),
+                  child: Text('You may need to re-authenticate to make changes in your account'),
+                )
+              ],
+            ),
+            SettingItem("Username", username, false),
+            SettingItem("Email", email, true),
+            ElevatedButton(
+                onPressed: signOut,
+                child: Text('Sign out')
+            )
+          ],
+        ),
+      )
     );
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context, bool isEmail) async {
+    String newValue = '';
+    String currentOption = isEmail ? 'email' : 'username';
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Change ${currentOption}'),
+            content: TextField(
+              decoration: InputDecoration(hintText: 'Enter new ${currentOption}'),
+              onChanged: (value) {
+                newValue = value;
+              },
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: kSecondaryColor,
+                textColor: Colors.white,
+                child: Text('Cancel'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: kPrimaryColor,
+                textColor: Colors.white,
+                child: Text('Ok'),
+                onPressed: () {
+                  setState(() {
+                    if(newValue.isNotEmpty){
+                      if(isEmail){
+                        setState(() {
+                          email = newValue;
+                          // currentUser?.updateEmail("janeq@example.com");
+                          FirebaseAuth.instance.currentUser?.updateEmail(email);
+                        });
+                      }
+                      else{
+                        setState(() {
+                          username = newValue;
+                          // currentUser?.updateEmail("janeq@example.com");
+                          FirebaseAuth.instance.currentUser?.updateDisplayName(username);
+                        });
+                      }
+                    }
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+
+            ],
+          );
+        });
   }
 }
