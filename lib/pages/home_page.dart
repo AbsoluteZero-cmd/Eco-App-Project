@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eco_app_project/auth/auth.dart';
-import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
-
+                    fontFamily: 'Montserrat'
                   ),
                   child: Container(
                     padding: const EdgeInsets.only(top: kDefaultPadding),
@@ -93,6 +92,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: kBackgroundColor,
                   fontSize: 20,
+                  fontFamily: 'Montserrat',
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(kDefaultPadding),
@@ -110,14 +110,16 @@ class _HomePageState extends State<HomePage> {
                             text: TextSpan(
                                 text: 'Hello\,\n',
                                 style: TextStyle(
-                                    fontSize: 20
+                                    fontSize: 20,
+                                    fontFamily: 'Montserrat',
                                 ),
                                 children: [
                                   TextSpan(
                                       text: userName,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800,
-                                          fontSize: 24
+                                          fontSize: 24,
+                                          fontFamily: 'Montserrat',
                                       )
                                   ),
                                   TextSpan(text: '!\n'),
@@ -132,7 +134,8 @@ class _HomePageState extends State<HomePage> {
                               pointsCount <= 20000 ? '$pointsCount' : '20000',
                               style: TextStyle(
                                   fontSize: 64,
-                                  fontWeight: FontWeight.w800
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: 'Montserrat',
                               ),
                             ),
                           )
@@ -153,7 +156,8 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   '$dayStreak day streak',
                                   style: TextStyle(
-                                      fontSize: 16
+                                      fontSize: 16,
+                                      fontFamily: 'Montserrat',
                                   ),
                                 )
                               ],

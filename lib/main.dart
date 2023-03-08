@@ -20,10 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         accentColor: kSecondaryColor,
         primarySwatch: Colors.deepOrange,
+        fontFamily: 'Montserrat',
       ),
       home: StreamBuilder(
         stream: Auth().authStateChanges,
