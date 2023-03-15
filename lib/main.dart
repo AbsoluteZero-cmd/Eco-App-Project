@@ -23,9 +23,8 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         primaryColor: kPrimaryColor,
-        accentColor: kSecondaryColor,
-        primarySwatch: Colors.deepOrange,
         fontFamily: 'Montserrat',
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepOrange).copyWith(secondary: kSecondaryColor),
       ),
       home: StreamBuilder(
         stream: Auth().authStateChanges,

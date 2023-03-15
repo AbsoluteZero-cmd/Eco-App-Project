@@ -111,9 +111,11 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             actions: <Widget>[
-              FlatButton(
-                color: kSecondaryColor,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: kPrimaryColor,
+                  backgroundColor: Colors.white
+                ),
                 child: Text('Cancel'),
                 onPressed: () {
                   setState(() {
@@ -121,9 +123,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 },
               ),
-              FlatButton(
-                color: kPrimaryColor,
-                textColor: Colors.white,
+              TextButton(
+                style: TextButton.styleFrom(
+                    primary: kPrimaryColor,
+                    backgroundColor: Colors.white
+                ),
                 child: Text('Ok'),
                 onPressed: () {
                   setState(() {
