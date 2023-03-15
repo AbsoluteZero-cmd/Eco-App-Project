@@ -1,5 +1,5 @@
 import 'package:eco_app_project/pages/archive_detail_page.dart';
-import 'package:eco_app_project/plant._model.dart';
+import 'package:eco_app_project/my_classes.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -32,6 +32,9 @@ class _ArchivePageState extends State<ArchivePage> {
       Plant('Magnolia', 'Cute', 4, 'https://static.vecteezy.com/system/resources/previews/009/390/943/original/watercolor-white-magnolia-flower-and-leaf-branch-bouquet-png.png'),
       Plant('Grass', 'Totally normal', 1, 'https://purepng.com/public/uploads/large/purepng.com-grassgrasstype-of-plantgrasslandgrass-lawn-1411527053156hdv8f.png'),
     ];
+
+    for(int i = 0; i < 4; i++) plants[1].addDisease(Disease('some shit' + i.toString(), 3, 'Blue points on the flowers'));
+
 
     _pageController = PageController(initialPage: 0, viewportFraction: 0.8);
   }

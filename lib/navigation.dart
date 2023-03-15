@@ -1,6 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/pages/archive_page.dart';
+import 'package:eco_app_project/pages/camera_page.dart';
 import 'package:eco_app_project/pages/home_page.dart';
 import 'package:eco_app_project/pages/map_page.dart';
 import 'package:eco_app_project/pages/settings_page.dart';
@@ -42,11 +43,10 @@ class _NavigationState extends State<Navigation> {
   }
 
   Future<void> onButtonPress() async {
-
-    //
-    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //   content: Text("Database Updated!"),
-    // ));
+    Navigator.push(
+        context,
+        PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => CameraPage())
+    );
   }
 
   @override

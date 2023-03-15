@@ -1,8 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/constants.dart';
+import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
+
+import '../my_classes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,7 +17,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Widget historyCardBuilder(BuildContext context, int i) {
+  late double width, height;
+  late String userName;
+  late int pointsCount, dayStreak;
+  final List<HistoryItem> historyItems = [];
+
+
+  Widget historyCardBuilder(BuildContext context, HistoryItem historyItem) {
     return Card(
         margin: EdgeInsets.symmetric(horizontal: 5.0),
         child: Padding(
@@ -21,7 +32,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.network(
-                  'https://images.unsplash.com/photo-1502311526760-ebc5d6cc0183?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=326&q=80',
+                  historyItem.plant.imageURL,
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                   repeat: ImageRepeat.noRepeat,
@@ -37,20 +48,40 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Container(
                     padding: const EdgeInsets.only(top: kDefaultPadding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Title: Some tree'),
-                        Text('Where: Satpaev street'),
-                        Text('When: 19.08.22'),
-                        Text('Points: +500')
-                      ],
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(historyItem.title, overflow: TextOverflow.ellipsis),
+                          Text('aaa', overflow: TextOverflow.ellipsis),
+                          Text(historyItem.date.toString(), overflow: TextOverflow.ellipsis),
+                          Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: FloatingActionButton(
+                                    onPressed: () {},
+                                    child: Icon(Icons.place),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )
               ],
             )
-        )
+        ),
     );
   }
 
@@ -66,17 +97,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
     // loadFromDB();
 
-    final String userName = Auth().currentUser?.displayName ?? 'user';
-    final int pointsCount = 13900;
-    final int dayStreak = 4;
+    userName = Auth().currentUser?.displayName ?? 'user';
+    pointsCount = 100;
+    dayStreak = 1;
 
-    final List<int> historyItems = [1, 2, 3];
+
+    historyItems.add(HistoryItem("some shit", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 1.0, long: 1.0), DateTime(1, 1, 1), 30));
+    historyItems.add(HistoryItem("some shit 2", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 1.0, long: 1.0), DateTime(1, 1, 1), 30));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
 
     return Scaffold(
         body: Column(
@@ -190,9 +229,10 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: CarouselSlider(
                 options: CarouselOptions(
-                  height: height * 0.45,
+                  height: height * 0.5,
                   enlargeCenterPage: true,
                   enlargeFactor: 0.2,
+                  autoPlay: true,
                 ),
                 items: historyItems.map((i) {
                   return Builder(
