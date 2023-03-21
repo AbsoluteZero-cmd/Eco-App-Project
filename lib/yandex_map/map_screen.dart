@@ -21,13 +21,26 @@ class _MapScreenState extends State<MapScreen> {
   final mapControllerCompleter = Completer<YandexMapController>();
 
 
-  final List<MapObject> mapObjects = [
-    PlacemarkMapObject(
-      mapId: MapObjectId('mark1'),
-      point: const Point(latitude: 43.2504832, longitude: 76.8770048),
-      opacity: 0.8
-    ),
-  ];
+  final List<MapObject> mapObjects = [];
+
+
+  PlacemarkMapObject getPlacemarkMapObject(double lat, double long){
+    return PlacemarkMapObject(
+      mapId: MapObjectId(lat.toString() + long.toString()),
+      point: Point(latitude: lat, longitude: long),
+      opacity: 1,
+      icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+            image: BitmapDescriptor.fromAssetImage('assets/Yandex_Maps_icon.png'),
+            scale: 0.05,
+            rotationType: RotationType.noRotation,
+          )
+      ),
+      onTap: (mapObject, point) {
+        print('click on ${mapObject.mapId}');
+      },
+    );
+  }
 
 
   Future<void> _initPermission() async {
@@ -71,6 +84,10 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _initPermission().ignore();
+
+    mapObjects.add(getPlacemarkMapObject(44.2504832, 75.8770048));
+    mapObjects.add(getPlacemarkMapObject(44.2504842, 79.8770048));
+    mapObjects.add(getPlacemarkMapObject(44.2584832, 15.8770048));
   }
 
   @override

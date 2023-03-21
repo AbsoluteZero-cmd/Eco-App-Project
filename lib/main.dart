@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:eco_app_project/auth/login_register_page.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/navigation.dart';
@@ -8,13 +9,16 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp(cameras: cameras));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({required this.cameras, Key? key}) : super(key: key);
 
+  final List<CameraDescription> cameras;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
         stream: Auth().authStateChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Navigation();
+            return Navigation(cameras: cameras);
           } else {
             return const LoginPage();
           }

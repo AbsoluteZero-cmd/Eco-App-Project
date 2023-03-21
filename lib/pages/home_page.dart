@@ -93,17 +93,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> loadFromDB() async {
-    String? uid = Auth().currentUser?.uid.toString();
-    final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('users/$uid/name').get();
-    if (snapshot.exists) {
-      print(snapshot.value);
-    } else {
-      print('No data available.');
-    }
-  }
-
   @override
   void initState() {
     // TODO: implement initState

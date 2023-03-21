@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:camera/camera.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/pages/archive_page.dart';
 import 'package:eco_app_project/pages/camera_page.dart';
@@ -11,7 +12,9 @@ import 'package:flutter/material.dart';
 
 
 class Navigation extends StatefulWidget {
-  const Navigation({Key? key}) : super(key: key);
+  const Navigation({required this.cameras, Key? key}) : super(key: key);
+
+  final List<CameraDescription> cameras;
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -45,7 +48,7 @@ class _NavigationState extends State<Navigation> {
   Future<void> onButtonPress() async {
     Navigator.push(
         context,
-        PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => CameraPage())
+        PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => CameraPage(cameras: widget.cameras))
     );
   }
 
