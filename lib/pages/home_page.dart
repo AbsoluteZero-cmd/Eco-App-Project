@@ -2,9 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
+import 'package:eco_app_project/yandex_map/map_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../my_classes.dart';
@@ -27,9 +29,10 @@ class _HomePageState extends State<HomePage> {
     return Card(
         margin: EdgeInsets.symmetric(horizontal: 5.0),
         child: Padding(
-            padding: const EdgeInsets.all(kDefaultPadding * 0.5),
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Image.network(
                   historyItem.plant.imageURL,
@@ -52,11 +55,11 @@ class _HomePageState extends State<HomePage> {
                       width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(historyItem.title, overflow: TextOverflow.ellipsis),
-                          Text('aaa', overflow: TextOverflow.ellipsis),
-                          Text(historyItem.date.toString(), overflow: TextOverflow.ellipsis),
+                          Text(historyItem.title.toUpperCase(), overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),),
+                          Text('Link to the plant', overflow: TextOverflow.ellipsis),
+                          Text(DateFormat('EEEE, MMM d, yyyy').format(historyItem.date), overflow: TextOverflow.ellipsis),
                           Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
@@ -67,7 +70,12 @@ class _HomePageState extends State<HomePage> {
                                   height: 40,
                                   width: 40,
                                   child: FloatingActionButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => MapScreen(kPoint: historyItem.latLong)),
+                                      );
+                                    },
                                     child: Icon(Icons.place),
                                   ),
                                 )
@@ -108,8 +116,8 @@ class _HomePageState extends State<HomePage> {
     dayStreak = 1;
 
 
-    historyItems.add(HistoryItem("some shit", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 1.0, long: 1.0), DateTime(1, 1, 1), 30));
-    historyItems.add(HistoryItem("some shit 2", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 1.0, long: 1.0), DateTime(1, 1, 1), 30));
+    historyItems.add(HistoryItem("some shit", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 1.0, long: 1.0), DateTime.now(), 30));
+    historyItems.add(HistoryItem("some shit 2", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 40.730610, long: -73.935242), DateTime.now(), 50));
   }
 
   @override

@@ -14,3 +14,10 @@ class MoscowLocation extends AppLatLong {
     super.long = 37.6155600,
   });
 }
+
+class AlmatyLocation extends AppLatLong {
+  const AlmatyLocation({
+    super.lat = 43.238949,
+    super.long = 76.889709,
+  });
+}

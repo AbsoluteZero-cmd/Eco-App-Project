@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({
+    this.kPoint = const AppLatLong(lat: 0, long: 0),
+    Key? key,
+  }) : super(key: key);
+
+  final AppLatLong kPoint;
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -14,6 +19,16 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final mapControllerCompleter = Completer<YandexMapController>();
+
+
+  final List<MapObject> mapObjects = [
+    PlacemarkMapObject(
+      mapId: MapObjectId('mark1'),
+      point: const Point(latitude: 43.2504832, longitude: 76.8770048),
+      opacity: 0.8
+    ),
+  ];
+
 
   Future<void> _initPermission() async {
     if (!await LocationService().checkPermission()) {
@@ -24,12 +39,14 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _fetchCurrentLocation() async {
     AppLatLong location;
-    const defLocation = MoscowLocation();
+    const defLocation = AlmatyLocation();
     try {
       location = await LocationService().getCurrentLocation();
     } catch (_) {
       location = defLocation;
     }
+
+    if(!(widget.kPoint.lat == 0 && widget.kPoint.long == 0)) location = widget.kPoint;
     _moveToCurrentLocation(location);
   }
 
@@ -59,13 +76,11 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map'),
-      ),
       body: YandexMap(
         onMapCreated: (controller) {
           mapControllerCompleter.complete(controller);
         },
+        mapObjects: mapObjects,
       ),
     );
   }

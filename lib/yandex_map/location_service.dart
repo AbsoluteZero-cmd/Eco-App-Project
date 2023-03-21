@@ -3,7 +3,7 @@ import 'package:eco_app_project/yandex_map/app_location.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService implements AppLocation {
-  final defLocation = const MoscowLocation();
+  final defLocation = const AlmatyLocation();
 
   @override
   Future<bool> checkPermission() {
