@@ -1,5 +1,7 @@
+
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
 class Plant {
   late String name;
@@ -35,11 +37,11 @@ class Disease {
 
 class HistoryItem{
   String title;
-  Plant plant;
+  String imageUri;
   int points;
   DateTime date;
   AppLatLong latLong;
 
-  HistoryItem(this.title, this.plant, this.latLong, this.date, this.points);
+  HistoryItem(this.title, this.imageUri, this.latLong, this.date, this.points);
 
 }

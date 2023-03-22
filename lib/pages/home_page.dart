@@ -30,61 +30,60 @@ class _HomePageState extends State<HomePage> {
         margin: EdgeInsets.symmetric(horizontal: 5.0),
         child: Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.7),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Stack(
               children: [
-                Image.network(
-                  historyItem.plant.imageURL,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                  repeat: ImageRepeat.noRepeat,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.25,
-                ),
-                // Spacer(),
-                DefaultTextStyle(
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey,
-                    fontFamily: 'Montserrat'
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.only(top: kDefaultPadding),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(historyItem.title.toUpperCase(), overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),),
-                          Text('Link to the plant', overflow: TextOverflow.ellipsis),
-                          Text(DateFormat('EEEE, MMM d, yyyy').format(historyItem.date), overflow: TextOverflow.ellipsis),
-                          Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-                            child: Row(
-                              children: [
-                                Spacer(),
-                                SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: FloatingActionButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => MapScreen(kPoint: historyItem.latLong)),
-                                      );
-                                    },
-                                    child: Icon(Icons.place),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Image.asset(
+                      historyItem.imageUri,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                      repeat: ImageRepeat.noRepeat,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.21,
                     ),
+                    DefaultTextStyle(
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.grey,
+                        fontFamily: 'Montserrat'
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.only(top: kDefaultPadding),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                historyItem.title.toUpperCase(),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
+                                maxLines: 2,
+                              ),
+                              Text(DateFormat('EEEE, MMM d, yyyy').format(historyItem.date), overflow: TextOverflow.ellipsis, maxLines: 2,),
+                              Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Positioned(
+                  bottom: 20,
+                  right: 0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MapScreen(kPoint: historyItem.latLong)),
+                      );
+                      },
+                    child: Icon(Icons.location_on),
                   ),
                 )
               ],
@@ -100,13 +99,13 @@ class _HomePageState extends State<HomePage> {
 
     // loadFromDB();
 
-    userName = Auth().currentUser?.displayName ?? 'user';
-    pointsCount = 100;
+    userName = 'user';
+    pointsCount = 80;
     dayStreak = 1;
 
 
-    historyItems.add(HistoryItem("some shit", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 1.0, long: 1.0), DateTime.now(), 30));
-    historyItems.add(HistoryItem("some shit 2", Plant('Pine tree', 'smelly', 3, 'http://via.placeholder.com/500/500'), AppLatLong(lat: 40.730610, long: -73.935242), DateTime.now(), 50));
+    historyItems.add(HistoryItem("Pitch canker on pine", 'assets/pine-pitch-canker.jpg', AppLatLong(lat: 43.224173, long: 76.916591), DateTime.now(), 30));
+    historyItems.add(HistoryItem("Planted new tree", 'assets/newly_planted_tree.jpg', AppLatLong(lat: 40.730610, long: -73.935242), DateTime.now(), 50));
   }
 
   @override
@@ -156,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                                           fontWeight: FontWeight.w800,
                                           fontSize: 24,
                                           fontFamily: 'Montserrat',
-                                      )
+                                      ),
                                   ),
                                   TextSpan(text: '!\n'),
                                   TextSpan(

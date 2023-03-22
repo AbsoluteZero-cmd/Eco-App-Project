@@ -24,6 +24,7 @@ class _MapScreenState extends State<MapScreen> {
   final List<MapObject> mapObjects = [];
 
 
+
   PlacemarkMapObject getPlacemarkMapObject(double lat, double long){
     return PlacemarkMapObject(
       mapId: MapObjectId(lat.toString() + long.toString()),
@@ -37,7 +38,9 @@ class _MapScreenState extends State<MapScreen> {
           )
       ),
       onTap: (mapObject, point) {
-        print('click on ${mapObject.mapId}');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(point.toString()),
+        ));
       },
     );
   }
@@ -67,14 +70,14 @@ class _MapScreenState extends State<MapScreen> {
       AppLatLong appLatLong,
       ) async {
     (await mapControllerCompleter.future).moveCamera(
-      animation: const MapAnimation(type: MapAnimationType.linear, duration: 1),
+      animation: const MapAnimation(type: MapAnimationType.linear, duration: 0.95),
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: Point(
             latitude: appLatLong.lat,
             longitude: appLatLong.long,
           ),
-          zoom: 12,
+          zoom: 15,
         ),
       ),
     );
@@ -85,19 +88,34 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _initPermission().ignore();
 
-    mapObjects.add(getPlacemarkMapObject(44.2504832, 75.8770048));
-    mapObjects.add(getPlacemarkMapObject(44.2504842, 79.8770048));
-    mapObjects.add(getPlacemarkMapObject(44.2584832, 15.8770048));
+    mapObjects.add(getPlacemarkMapObject(43.224173, 76.916591));
+    mapObjects.add(getPlacemarkMapObject(40.730610, -73.935242));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: YandexMap(
-        onMapCreated: (controller) {
-          mapControllerCompleter.complete(controller);
-        },
-        mapObjects: mapObjects,
+      body: Stack(
+        children: [
+          YandexMap(
+            onMapCreated: (controller) {
+              mapControllerCompleter.complete(controller);
+            },
+            mapObjects: mapObjects,
+            mode2DEnabled: true,
+          ),
+          Positioned(
+            left: 10,
+            bottom: 10,
+            child: FloatingActionButton.small(
+              onPressed: () {
+                _fetchCurrentLocation();
+              },
+              backgroundColor: Colors.white,
+              child: const Icon(Icons.location_searching, color: Colors.black54,),
+            ),
+          )
+        ],
       ),
     );
   }
