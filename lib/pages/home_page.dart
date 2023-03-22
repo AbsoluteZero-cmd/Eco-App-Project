@@ -99,8 +99,8 @@ class _HomePageState extends State<HomePage> {
 
     // loadFromDB();
 
-    userName = 'user';
-    pointsCount = 80;
+    userName = Auth().currentUser!.displayName.toString();
+    pointsCount = 2910;
     dayStreak = 1;
 
 
@@ -141,34 +141,37 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                                text: 'Hello\,\n',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: 'Montserrat',
-                                ),
-                                children: [
-                                  TextSpan(
-                                      text: userName,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 24,
-                                          fontFamily: 'Montserrat',
-                                      ),
+                          SizedBox(
+                            child: RichText(
+                              text: TextSpan(
+                                  text: 'Hello\,\n',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Montserrat',
                                   ),
-                                  TextSpan(text: '!\n'),
-                                  TextSpan(
-                                      text: 'Your points'
-                                  )
-                                ]
+                                  children: [
+                                    TextSpan(
+                                        text: userName,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 24,
+                                            fontFamily: 'Montserrat',
+                                        ),
+                                    ),
+                                    TextSpan(text: '!\n'),
+                                    TextSpan(
+                                        text: 'Your points:'
+                                    )
+                                  ],
+                              ),
                             ),
+                            width: width * 0.5 - kDefaultPadding,
                           ),
                           Flexible(
                             child: Text(
-                              pointsCount <= 20000 ? '$pointsCount' : '20000',
+                              pointsCount <= 99999 ? '$pointsCount' : '99999',
                               style: TextStyle(
-                                  fontSize: 64,
+                                  fontSize: 64 / (pointsCount.toString().length) * 3.5,
                                   fontWeight: FontWeight.w800,
                                   fontFamily: 'Montserrat',
                               ),
