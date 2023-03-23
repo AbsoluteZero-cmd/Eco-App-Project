@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:eco_app_project/constants.dart';
+import 'package:eco_app_project/pages/new_history_item_page.dart';
 import 'package:flutter/material.dart';
 
 class CameraPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class _CameraPageState extends State<CameraPage> {
   late Future<void> cameraValue;
 
   late Widget kWidget;
+  XFile kImage = XFile('');
 
   @override
   void initState() {
@@ -30,7 +32,7 @@ class _CameraPageState extends State<CameraPage> {
     cameraController = CameraController(cameras[0], ResolutionPreset.high, enableAudio: false);
     cameraValue = cameraController.initialize();
 
-    kWidget = Container(height: 50, width: 50, color: Colors.grey,);
+    kWidget = Container(height: 80, width: 80, color: Colors.grey,);
   }
 
   @override
@@ -44,17 +46,21 @@ class _CameraPageState extends State<CameraPage> {
     return Scaffold(
       body: Column(
         children: [
-          FutureBuilder(
-            future: cameraValue,
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.done){
-                return CameraPreview(cameraController);
-              }
-              else{
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }},
+          Container(
+            height: MediaQuery.of(context).size.height * 0.85,
+            color: Colors.grey,
+            child: FutureBuilder(
+              future: cameraValue,
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.done){
+                  return CameraPreview(cameraController);
+                }
+                else{
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }},
+            ),
           ),
           Expanded(
             child: Padding(
@@ -62,11 +68,6 @@ class _CameraPageState extends State<CameraPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    child: kWidget,
-                  ),
                   FloatingActionButton.large(
                     child: Icon(Icons.camera),
                     onPressed: () async {
@@ -79,7 +80,16 @@ class _CameraPageState extends State<CameraPage> {
                         final image = await cameraController.takePicture();
                         print('my new image is at ${image.path}');
                         setState(() {
-                          kWidget = Image.file(File(image.path), height: 80, width: 80, fit: BoxFit.cover,);
+                          kImage = image;
+
+                          kWidget = Material(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewHistoryItemPage(image: kImage)));
+                              },
+                              child: Image.file(File(image.path), height: 80, width: 80, fit: BoxFit.cover),
+                            ),
+                          );
                         });
                       } catch (e) {
                         // If an error occurs, log the error to the console.
@@ -87,10 +97,7 @@ class _CameraPageState extends State<CameraPage> {
                       }
                     },
                   ),
-                  SizedBox(
-                    width: 100,
-                    child: Text('This is a tree...'),
-                  )
+                  kWidget
                 ],
               ),
             ),

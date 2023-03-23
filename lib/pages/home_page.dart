@@ -1,13 +1,12 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/map_screen.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../my_classes.dart';
 
@@ -100,7 +99,7 @@ class _HomePageState extends State<HomePage> {
     // loadFromDB();
 
     userName = Auth().currentUser!.displayName.toString();
-    pointsCount = 2910;
+    pointsCount = 10;
     dayStreak = 1;
 
 
@@ -171,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text(
                               pointsCount <= 99999 ? '$pointsCount' : '99999',
                               style: TextStyle(
-                                  fontSize: 64 / (pointsCount.toString().length) * 3.5,
+                                  fontSize: max(36, 64 / (pointsCount.toString().length) * 3.5),
                                   fontWeight: FontWeight.w800,
                                   fontFamily: 'Montserrat',
                               ),
