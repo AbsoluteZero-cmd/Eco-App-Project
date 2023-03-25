@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
     // loadFromDB();
 
     userName = Auth().currentUser!.displayName.toString();
-    pointsCount = 10;
+    pointsCount = 80;
     dayStreak = 1;
 
 

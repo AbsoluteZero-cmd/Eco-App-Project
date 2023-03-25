@@ -2,13 +2,13 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:camera/camera.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/pages/archive_page.dart';
-import 'package:eco_app_project/pages/camera_page.dart';
 import 'package:eco_app_project/pages/home_page.dart';
-import 'package:eco_app_project/pages/map_page.dart';
+import 'package:eco_app_project/pages/new_history_item_page.dart';
 import 'package:eco_app_project/pages/settings_page.dart';
 import 'package:eco_app_project/yandex_map/map_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 class Navigation extends StatefulWidget {
@@ -46,10 +46,9 @@ class _NavigationState extends State<Navigation> {
   }
 
   Future<void> onButtonPress() async {
-    Navigator.push(
-        context,
-        PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => CameraPage(cameras: widget.cameras))
-    );
+    var image = await ImagePicker().getImage(source: ImageSource.camera);
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewHistoryItemPage(image: image)));
   }
 
   @override

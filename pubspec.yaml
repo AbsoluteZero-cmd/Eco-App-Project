@@ -42,12 +42,16 @@ dependencies:
   firebase_auth: ^4.2.4
   firebase_database: ^10.0.9
 
-  tflite_flutter: ^0.9.0
-  tflite_flutter_helper:
-    git:
-      url: https://github.com/filofan1/tflite_flutter_helper.git
-      ref: 783f15e5a87126159147d8ea30b98eea9207ac70
+#  tflite_flutter: ^0.9.0
+#  tflite_flutter_helper:
+#    git:
+#      url: https://github.com/filofan1/tflite_flutter_helper.git
+#      ref: 783f15e5a87126159147d8ea30b98eea9207ac70
 
+
+  image_picker: ^0.8.7
+  tflite: ^1.1.1
+  meta: ^1.1.8
 
 
   intl: ^0.17.0
