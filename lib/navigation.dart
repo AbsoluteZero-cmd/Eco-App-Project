@@ -1,5 +1,4 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:camera/camera.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/pages/archive_page.dart';
 import 'package:eco_app_project/pages/home_page.dart';
@@ -12,9 +11,7 @@ import 'package:image_picker/image_picker.dart';
 
 
 class Navigation extends StatefulWidget {
-  const Navigation({required this.cameras, Key? key}) : super(key: key);
-
-  final List<CameraDescription> cameras;
+  const Navigation({Key? key}) : super(key: key);
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -47,6 +44,8 @@ class _NavigationState extends State<Navigation> {
 
   Future<void> onButtonPress() async {
     var image = await ImagePicker().getImage(source: ImageSource.camera);
+
+    if(image == null) return;
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewHistoryItemPage(image: image)));
   }

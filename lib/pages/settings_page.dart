@@ -32,28 +32,35 @@ class _SettingsPageState extends State<SettingsPage> {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(kDefaultPadding * 0.5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title + ":",
-              style: TextStyle(
-                fontWeight: FontWeight.w600
-              ),
-            ),
-            TextButton.icon(
-              onPressed: () {
-                _displayTextInputDialog(context, isEmail);
-              },
-              icon: Text(
-                '${val}',
+        child: Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title + ":",
                 style: TextStyle(
-                    color: Colors.black
+                  fontWeight: FontWeight.w600
                 ),
               ),
-              label: Icon(Icons.edit)
-            ),
-          ],
+              Flexible(
+                child: Container(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      _displayTextInputDialog(context, isEmail);
+                    },
+                    icon: Text(
+                      '${val}',
+                      style: TextStyle(
+                          color: Colors.black
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    label: Icon(Icons.edit),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -73,7 +80,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 Text(
                   'Settings',
                   style: TextStyle(
-                      fontSize: kFontTitle
+                      fontSize: kFontTitle,
+                      fontWeight: FontWeight.bold
                   ),
                 ),
                 Padding(
@@ -97,16 +105,31 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _displayTextInputDialog(BuildContext context, bool isEmail) async {
     String newValue = '';
     String currentOption = isEmail ? 'email' : 'username';
+    String _error = '';
 
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
+
             title: Text('Change ${currentOption}'),
             content: TextField(
-              decoration: InputDecoration(hintText: 'Enter new ${currentOption}'),
+              decoration: InputDecoration(
+                hintText: 'Enter new ${currentOption}',
+                errorText: _error == '' ? null : _error,
+              ),
               onChanged: (value) {
-                newValue = value;
+                setState(() {
+                  if(value.isEmpty || value == null){
+                    _error = 'The input must not be empty';
+                  }
+                  else if(value.length > 10){
+                    _error = 'The length must be less than 10 symbols';
+                  }
+                  else{
+                    newValue = value;
+                  }
+                });
               },
             ),
             actions: <Widget>[
@@ -130,7 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text('Ok'),
                 onPressed: () {
                   setState(() {
-                    if(newValue.isNotEmpty){
+                    if(newValue.isNotEmpty && _error == ''){
                       if(isEmail){
                         setState(() {
                           email = newValue;
@@ -145,6 +168,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           FirebaseAuth.instance.currentUser?.updateDisplayName(username);
                         });
                       }
+                    }
+                    else{
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_error)));
                     }
                     Navigator.pop(context);
                   });

@@ -64,7 +64,7 @@ class _ArchivePageState extends State<ArchivePage> {
                     plants[index].name,
                     style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                         fontSize: kFontTitle
                     )
                 ),
@@ -134,6 +134,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   'Plants archive',
                   style: TextStyle(
                     fontSize: kFontTitle,
+                    fontWeight: FontWeight.bold
                   ),
 
               ),

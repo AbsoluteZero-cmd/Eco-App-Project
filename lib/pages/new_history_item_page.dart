@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:eco_app_project/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 
 class NewHistoryItemPage extends StatefulWidget {
@@ -22,6 +24,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   bool _loading = false;
   List<dynamic>? _outputs;
   String res = "no results yet";
+  final currentDate = DateTime.now();
+  int currentPoints = 0;
+
 
 
   final ImagePicker _picker = ImagePicker();
@@ -61,11 +66,12 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     setState(() {
       _loading = false;
-      //Declare List _outputs in the class which will be used to show the classified class name and confidence
       _outputs = output;
       res = _outputs![0]["label"];
       print('my output: ${res}');
     });
+
+    currentPoints = calculatePoints(res);
 
     print('my output: ${res}');
   }
@@ -73,13 +79,52 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.file(_image),
-          Text(res),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding * 1.5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Plant\'s form',
+              style: TextStyle(
+                fontSize: kFontTitle,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.file(
+                _image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Flexible(
+              child: Text(
+                '${res} = ${currentPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
+                maxLines: 2,
+              ),
+            ),
+            TextField(
+              maxLines: 1,
+              decoration: InputDecoration(
+                hintText: 'Input your plant\'s name',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: uploadData,
+              child: Text('Upload'),
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  int calculatePoints(String plant_type) {
+    return 30;
+  }
+
+  void uploadData() {
   }
 }

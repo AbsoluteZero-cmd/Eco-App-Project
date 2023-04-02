@@ -39,15 +39,15 @@ class _LoginPageState extends State<LoginPage> {
         password: _controllerPassword.text,
       );
 
-      String? uid = Auth().currentUser?.uid.toString();
+      String? uid = Auth().currentUser?.uid.toString() ?? 'no-uid';
       DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
       var generator = UsernameGenerator();
-      String name = generator.generateRandom();
+      String name = generator.generateRandom().substring(0, 8);
+
+      MyUser myUser = MyUser(uid: uid, name: name);
+
       Auth().currentUser?.updateDisplayName(name);
-      await ref.set({
-        "uid": uid,
-        "score": 0,
-      });
+      await ref.set(myUser.toMap());
 
     } on FirebaseAuthException catch (e) {
       setState(() {
