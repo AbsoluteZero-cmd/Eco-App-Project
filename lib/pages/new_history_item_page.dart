@@ -79,6 +79,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding * 1.5),
         child: Column(

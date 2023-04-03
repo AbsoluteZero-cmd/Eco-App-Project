@@ -33,8 +33,6 @@ class _HomePageState extends State<HomePage> {
     var result = await ref.get();
     final data = Map<String, dynamic>.from(result.value as Map);
     myUser = MyUser.fromMap(data);
-    print('my name: ${myUser!.name}');
-
 
     pointsCount = myUser!.points;
     dayStreak = myUser!.days_streak;
@@ -135,6 +133,7 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: FutureBuilder(
           future: fetchData(),
           builder: (_, snapshot) {
