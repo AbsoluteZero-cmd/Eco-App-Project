@@ -1,12 +1,17 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
+import 'package:eco_app_project/my_classes.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
+
+import '../auth/auth.dart';
 
 class NewHistoryItemPage extends StatefulWidget {
   const NewHistoryItemPage({this.image, Key? key}) : super(key: key);
@@ -21,9 +26,8 @@ class NewHistoryItemPage extends StatefulWidget {
 class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   late PickedFile? _file;
   late File _image;
-  bool _loading = false;
   List<dynamic>? _outputs;
-  String res = "no results yet";
+  String type_of_plant = "";
   final currentDate = DateTime.now();
   int currentPoints = 0;
 
@@ -65,15 +69,14 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
 
     setState(() {
-      _loading = false;
       _outputs = output;
-      res = _outputs![0]["label"];
-      print('my output: ${res}');
+      type_of_plant = _outputs![0]["label"];
+      print('my output: ${type_of_plant}');
     });
 
-    currentPoints = calculatePoints(res);
+    currentPoints = calculatePoints(type_of_plant);
 
-    print('my output: ${res}');
+    print('my output: ${type_of_plant}');
   }
 
   @override
@@ -102,7 +105,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
             ),
             Flexible(
               child: Text(
-                '${res} = ${currentPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
+                '${type_of_plant} = ${currentPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
                 maxLines: 2,
               ),
             ),
@@ -111,6 +114,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
               decoration: InputDecoration(
                 hintText: 'Input your plant\'s name',
               ),
+              onTap: (){},
             ),
             ElevatedButton(
               onPressed: uploadData,
@@ -126,6 +130,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     return 30;
   }
 
-  void uploadData() {
+  Future<void> uploadData() async {
+
   }
 }

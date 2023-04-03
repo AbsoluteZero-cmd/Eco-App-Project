@@ -33,6 +33,8 @@ class _HomePageState extends State<HomePage> {
     var result = await ref.get();
     final data = Map<String, dynamic>.from(result.value as Map);
     myUser = MyUser.fromMap(data);
+    print('my name: ${myUser!.name}');
+
 
     pointsCount = myUser!.points;
     dayStreak = myUser!.days_streak;
