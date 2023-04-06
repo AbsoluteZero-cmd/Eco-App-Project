@@ -5,13 +5,15 @@ class MyUser {
   final int points;
   final bool was_yesterday;
   final int days_streak;
+  final int history_items;
 
   MyUser(
       {required this.uid,
       required this.name,
       this.points = 0,
       this.was_yesterday = false,
-      this.days_streak = 1});
+      this.days_streak = 1,
+      this.history_items = 0});
 
   Map<String, dynamic> toMap() {
     return {
@@ -20,6 +22,7 @@ class MyUser {
       "points": points,
       "was_yesterday": was_yesterday,
       "days_streak": days_streak,
+      "history_items": history_items,
     };
   }
 
@@ -28,5 +31,6 @@ class MyUser {
         name = addressMap["name"],
         points = addressMap["points"],
         was_yesterday = addressMap["was_yesterday"],
-        days_streak = addressMap["days_streak"];
+        days_streak = addressMap["days_streak"],
+        history_items = addressMap["history_items"];
 }

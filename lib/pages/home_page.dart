@@ -54,8 +54,8 @@ class _HomePageState extends State<HomePage> {
     // fetchData();
 
 
-    historyItems.add(HistoryItem("Pitch canker on pine", 'assets/pine-pitch-canker.jpg', AppLatLong(lat: 43.224173, long: 76.916591), DateTime.now(), 30));
-    historyItems.add(HistoryItem("Planted new tree", 'assets/newly_planted_tree.jpg', AppLatLong(lat: 40.730610, long: -73.935242), DateTime.now(), 50));
+    historyItems.add(HistoryItem(title: "Pitch canker on pine", imageUri: 'assets/pine-pitch-canker.jpg', latLong: AppLatLong(lat: 43.224173, long: 76.916591).toString(), date: HistoryItem.getDate(DateTime.now()), points: 30));
+    historyItems.add(HistoryItem(title: "Pitch canker on pine", imageUri: 'assets/pine-pitch-canker.jpg', latLong: AppLatLong(lat: 43.224173, long: 76.916591).toString(), date: HistoryItem.getDate(DateTime.now()), points: 30));
   }
 
   Widget historyCardBuilder(BuildContext context, HistoryItem historyItem) {
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                                   style: TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
                                   maxLines: 2,
                                 ),
-                                Text(historyItem.getDate(), overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
                                 Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
                               ],
                             ),
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MapScreen(kPoint: historyItem.latLong)),
+                        MaterialPageRoute(builder: (context) => MapScreen(kPoint: AppLatLong.fromString(historyItem.latLong))),
                       );
                       },
                     child: Icon(Icons.location_on),

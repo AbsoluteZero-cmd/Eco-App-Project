@@ -22,6 +22,23 @@ class Plant {
   void addDisease(Disease disease){
     this.diseases.add(disease);
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "description": description,
+      "imageURL": imageURL,
+      "rarity": rarity,
+      "diseases": diseases,
+    };
+  }
+
+  Plant.fromMap(Map<String, dynamic> addressMap)
+      : name = addressMap["name"],
+        description = addressMap["description"],
+        imageURL = addressMap["imageURL"],
+        rarity = addressMap["rarity"],
+        diseases = addressMap["diseases"];
 }
 
 class Disease {
@@ -40,12 +57,36 @@ class HistoryItem{
   String title;
   String imageUri;
   int points;
-  DateTime date;
-  AppLatLong latLong;
+  String date;
+  String latLong;
 
-  HistoryItem(this.title, this.imageUri, this.latLong, this.date, this.points);
+  HistoryItem({
+      required this.title,
+      required this.imageUri,
+      required this.latLong,
+      required this.date,
+      required this.points}
+      );
 
-  String getDate() {
-    return DateFormat('EEEE, MMM d, yyyy').format(this.date);
+  static getDate(DateTime date){
+    return DateFormat('EEEE, MMM d, yyyy').format(date);
   }
+
+
+  Map<String, dynamic> toMap() {
+    return {
+      "title": title,
+      "imageUri": imageUri,
+      "points": points,
+      "date": date,
+      "latLong": latLong,
+    };
+  }
+
+  HistoryItem.fromMap(Map<String, dynamic> addressMap)
+      : title = addressMap["title"],
+        imageUri = addressMap["imageUri"],
+        points = addressMap["points"],
+        date = addressMap["date"],
+        latLong = addressMap["latLong"];
 }

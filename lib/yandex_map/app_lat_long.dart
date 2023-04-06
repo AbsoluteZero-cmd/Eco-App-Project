@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class AppLatLong {
   final double lat;
   final double long;
@@ -6,6 +8,16 @@ class AppLatLong {
     required this.lat,
     required this.long,
   });
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return lat.toString() + ' ' + long.toString();
+  }
+
+  AppLatLong.fromString(String latlong):
+        lat = double.parse(latlong.substring(0, latlong.indexOf(' '))),
+        long = double.parse(latlong.substring(latlong.indexOf(' ') + 1));
 }
 
 class MoscowLocation extends AppLatLong {

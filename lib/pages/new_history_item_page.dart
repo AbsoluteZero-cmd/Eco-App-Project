@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/my_classes.dart';
+import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,8 +33,8 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   int currentPoints = 0;
 
 
-
   final ImagePicker _picker = ImagePicker();
+  String? _input;
 
   @override
   void initState(){
@@ -74,7 +75,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       print('my output: ${type_of_plant}');
     });
 
-    currentPoints = calculatePoints(type_of_plant);
+    currentPoints = await calculatePoints(type_of_plant);
 
     print('my output: ${type_of_plant}');
   }
@@ -114,7 +115,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
               decoration: InputDecoration(
                 hintText: 'Input your plant\'s name',
               ),
-              onTap: (){},
+              onChanged: (text) {
+                _input = text;
+              },
             ),
             ElevatedButton(
               onPressed: uploadData,
@@ -131,6 +134,23 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   }
 
   Future<void> uploadData() async {
+    String? uid = Auth().currentUser?.uid.toString();
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
 
+    var result = await ref.get();
+    final data = Map<String, dynamic>.from(result.value as Map);
+    final myUser = MyUser.fromMap(data);
+
+    DatabaseReference item_ref = FirebaseDatabase.instance.ref("history/${uid}/${myUser.history_items + 1}");
+    await ref.update({
+      "history_items": myUser.history_items + 1,
+    });
+
+    final HistoryItem historyItem = HistoryItem(title: _input ?? 'no name', date: HistoryItem.getDate(currentDate), imageUri: '', latLong: AppLatLong(lat: 1, long: 1).toString(), points: currentPoints);
+
+
+    print(historyItem.toMap());
+
+    await item_ref.set(historyItem.toMap());
   }
 }
