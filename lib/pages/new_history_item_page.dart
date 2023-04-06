@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/my_classes.dart';
+import 'package:eco_app_project/pages/home_page.dart';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -152,5 +153,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     print(historyItem.toMap());
 
     await item_ref.set(historyItem.toMap());
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
   }
 }

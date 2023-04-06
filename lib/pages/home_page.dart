@@ -42,7 +42,6 @@ class _HomePageState extends State<HomePage> {
     return data;
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -139,136 +138,141 @@ class _HomePageState extends State<HomePage> {
         body: FutureBuilder(
           future: fetchData(),
           builder: (_, snapshot) {
-            return Column(
-              children: [
-                Container(
-                  height: height! * 0.35,
-                  width: width,
-                  decoration: BoxDecoration(
-                    color: kPrimaryColor,
-                  ),
-
-                  child: DefaultTextStyle(
-                    style: TextStyle(
-                      color: kBackgroundColor,
-                      fontSize: 20,
-                      fontFamily: 'Montserrat',
+            if(snapshot.hasData){
+              return Column(
+                children: [
+                  Container(
+                    height: height! * 0.35,
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(width: double.infinity,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: 'Hello\,\n',
+
+                    child: DefaultTextStyle(
+                      style: TextStyle(
+                        color: kBackgroundColor,
+                        fontSize: 20,
+                        fontFamily: 'Montserrat',
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(kDefaultPadding),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(width: double.infinity,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: 'Hello\,\n',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: userName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 24,
+                                            fontFamily: 'Montserrat',
+                                          ),
+                                        ),
+                                        TextSpan(text: '!\n'),
+                                        TextSpan(
+                                            text: 'Your points:'
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  width: width! * 0.5 - kDefaultPadding,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    pointsCount! <= 99999 ? '$pointsCount' : '99999',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: min(56, 64 / (pointsCount.toString().length) * 3.5),
+                                      fontWeight: FontWeight.w800,
                                       fontFamily: 'Montserrat',
                                     ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: kDefaultPadding * 0.5, top: kDefaultPadding * 2),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      TextSpan(
-                                        text: userName,
+                                      Icon(
+                                        Icons.local_fire_department,
+                                        color: kSecondaryColor,
+                                      ),
+                                      Text(
+                                        '$dayStreak day streak',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 24,
+                                          fontSize: 16,
                                           fontFamily: 'Montserrat',
                                         ),
-                                      ),
-                                      TextSpan(text: '!\n'),
-                                      TextSpan(
-                                          text: 'Your points:'
                                       )
                                     ],
                                   ),
                                 ),
-                                width: width! * 0.5 - kDefaultPadding,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  pointsCount! <= 99999 ? '$pointsCount' : '99999',
-                                  style: TextStyle(
-                                    fontSize: min(56, 64 / (pointsCount.toString().length) * 3.5),
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'Montserrat',
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: kDefaultPadding * 0.5, top: kDefaultPadding * 2),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Icon(
-                                      Icons.local_fire_department,
-                                      color: kSecondaryColor,
-                                    ),
-                                    Text(
-                                      '$dayStreak day streak',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: height! * 0.4 * 0.02,
-                                width: width! - 2 * kDefaultPadding,
-                                decoration: BoxDecoration(
-                                    color: kBackgroundColor,
-                                    borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
-                                ),
-                                alignment: Alignment.bottomLeft,
-                                child: Container(
-                                  width: (width! - 2 * kDefaultPadding) * dayStreak! / 7,
+                                Container(
+                                  height: height! * 0.4 * 0.02,
+                                  width: width! - 2 * kDefaultPadding,
                                   decoration: BoxDecoration(
-                                      color: kSecondaryColor,
+                                      color: kBackgroundColor,
                                       borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
                                   ),
-                                  padding: EdgeInsets.all(2),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                                  alignment: Alignment.bottomLeft,
+                                  child: Container(
+                                    width: (width! - 2 * kDefaultPadding) * dayStreak! / 7,
+                                    decoration: BoxDecoration(
+                                        color: kSecondaryColor,
+                                        borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
+                                    ),
+                                    padding: EdgeInsets.all(2),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: height! * 0.5,
-                      enlargeCenterPage: true,
-                      enlargeFactor: 0.2,
-                      autoPlay: true,
+                  Expanded(
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: height! * 0.5,
+                        enlargeCenterPage: true,
+                        enlargeFactor: 0.2,
+                        autoPlay: true,
+                      ),
+                      items: historyItems.map((i) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return historyCardBuilder(context, i);
+                          },
+                        );
+                      }).toList(),
                     ),
-                    items: historyItems.map((i) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return historyCardBuilder(context, i);
-                        },
-                      );
-                    }).toList(),
-                  ),
-                )
-              ],
-            );
+                  )
+                ],
+              );
+            }
+            else{
+              return Center(child: CircularProgressIndicator());
+            }
           },
         )
     );
