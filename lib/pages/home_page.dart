@@ -30,6 +30,8 @@ class _HomePageState extends State<HomePage> {
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
 
+    userName = Auth().currentUser!.displayName.toString();
+
     var result = await ref.get();
     final data = Map<String, dynamic>.from(result.value as Map);
     myUser = MyUser.fromMap(data);
@@ -48,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
     // pointsCount = 80;
     // dayStreak = 1;
-    userName = Auth().currentUser!.displayName.toString();
+
 
     // fetchData();
 

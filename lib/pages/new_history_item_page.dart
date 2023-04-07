@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/my_classes.dart';
-import 'package:eco_app_project/pages/home_page.dart';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 
 import '../auth/auth.dart';
+import '../navigation.dart';
 
 class NewHistoryItemPage extends StatefulWidget {
   const NewHistoryItemPage({this.image, Key? key}) : super(key: key);
@@ -32,10 +32,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   String type_of_plant = "";
   final currentDate = DateTime.now();
   int currentPoints = 0;
-
-
   final ImagePicker _picker = ImagePicker();
   String? _input;
+  bool _isLoading = false;
 
   @override
   void initState(){
@@ -111,7 +110,8 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
                 maxLines: 2,
               ),
             ),
-            TextField(
+            _isLoading ? LinearProgressIndicator()
+            : TextField(
               maxLines: 1,
               decoration: InputDecoration(
                 hintText: 'Input your plant\'s name',
@@ -135,6 +135,10 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   }
 
   Future<void> uploadData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
 
@@ -142,18 +146,24 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     final data = Map<String, dynamic>.from(result.value as Map);
     final myUser = MyUser.fromMap(data);
 
-    DatabaseReference item_ref = FirebaseDatabase.instance.ref("history/${uid}/${myUser.history_items + 1}");
+
     await ref.update({
       "history_items": myUser.history_items + 1,
     });
 
-    final HistoryItem historyItem = HistoryItem(title: _input ?? 'no name', date: HistoryItem.getDate(currentDate), imageUri: '', latLong: AppLatLong(lat: 1, long: 1).toString(), points: currentPoints);
+    DatabaseReference item_ref = FirebaseDatabase.instance.ref("history/${uid}/${myUser.history_items}");
 
+
+    Reference imgRef = FirebaseStorage.instance.ref("history/${uid}/${myUser.history_items}");
+    await imgRef.putFile(_image);
+    String imageUri = await imgRef.getDownloadURL();
+
+    final HistoryItem historyItem = HistoryItem(title: _input ?? 'no name', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: AppLatLong(lat: 1, long: 1).toString(), points: currentPoints);
 
     print(historyItem.toMap());
 
     await item_ref.set(historyItem.toMap());
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
   }
 }
