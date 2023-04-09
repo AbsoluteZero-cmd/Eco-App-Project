@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/location_service.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
+
+import '../auth/auth.dart';
+import '../my_classes.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({
@@ -27,7 +31,7 @@ class _MapScreenState extends State<MapScreen> {
 
 
 
-  PlacemarkMapObject getPlacemarkMapObject(double lat, double long){
+  PlacemarkMapObject getPlacemarkMapObject(double lat, double long, [String date = 'Date of planting']){
     return PlacemarkMapObject(
       mapId: MapObjectId(lat.toString() + long.toString()),
       point: Point(latitude: lat, longitude: long),
@@ -40,9 +44,12 @@ class _MapScreenState extends State<MapScreen> {
           )
       ),
       onTap: (mapObject, point) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(point.toString()),
-        ));
+        Fluttertoast.showToast(
+          msg: date,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+        );
       },
     );
   }
@@ -85,13 +92,30 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  Future fetchData() async {
+    String? uid = Auth().currentUser?.uid.toString();
+    DatabaseReference ref_history = FirebaseDatabase.instance.ref("history/${uid}");
+    var result = await ref_history.get();
+
+    List<MapObject> objects = [];
+    result.children.forEach((element) {
+      var data2 = Map<String, dynamic>.from(element.value as Map);
+      final historyItem = HistoryItem.fromMap(data2);
+      objects.add(getPlacemarkMapObject(historyItem.getLatLong().lat, historyItem.getLatLong().long, historyItem.date));
+    });
+
+    setState(() {
+      mapObjects.addAll(objects);
+    });
+  }
+
   @override
-  void initState() {
+  initState() {
     super.initState();
     _initPermission().ignore();
 
-    mapObjects.add(getPlacemarkMapObject(43.224173, 76.916591));
-    mapObjects.add(getPlacemarkMapObject(40.730610, -73.935242));
+    // mapObjects.add(getPlacemarkMapObject(43.224173, 76.916591));
+    // mapObjects.add(getPlacemarkMapObject(40.730610, -73.935242));
 
     final mapObject = CircleMapObject(
       mapId: MapObjectId('rounded_area'),
@@ -115,6 +139,8 @@ class _MapScreenState extends State<MapScreen> {
     );
 
     mapObjects.add(mapObject);
+
+    fetchData();
   }
 
   @override
