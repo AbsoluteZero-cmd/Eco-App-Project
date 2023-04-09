@@ -41,29 +41,29 @@ class _HomePageState extends State<HomePage> {
     pointsCount = myUser!.points;
     dayStreak = myUser!.days_streak;
 
-    return data;
+    DatabaseReference ref_history = FirebaseDatabase.instance.ref("history/${uid}");
+    result = await ref_history.get();
+
+    result.children.forEach((element) {
+      var data2 = Map<String, dynamic>.from(element.value as Map);
+      final historyItem = HistoryItem.fromMap(data2);
+      print(data2);
+      historyItems.add(historyItem);
+    });
+
+    return result;
   }
 
   @override
   void initState() {
     super.initState();
-
-    // pointsCount = 80;
-    // dayStreak = 1;
-
-
-    // fetchData();
-
-
-    historyItems.add(HistoryItem(title: "Pitch canker on pine", imageUri: 'assets/pine-pitch-canker.jpg', latLong: AppLatLong(lat: 43.224173, long: 76.916591).toString(), date: HistoryItem.getDate(DateTime.now()), points: 30));
-    historyItems.add(HistoryItem(title: "Pitch canker on pine", imageUri: 'assets/pine-pitch-canker.jpg', latLong: AppLatLong(lat: 43.224173, long: 76.916591).toString(), date: HistoryItem.getDate(DateTime.now()), points: 30));
   }
 
   Widget historyCardBuilder(BuildContext context, HistoryItem historyItem) {
     return Card(
-        margin: EdgeInsets.symmetric(horizontal: 5.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
         child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.7),
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.2),
             child: Stack(
               children: [
                 Column(
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
-                      child: Image.asset(
+                      child: Image.network(
                         historyItem.imageUri,
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
@@ -82,29 +82,27 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     DefaultTextStyle(
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         color: Colors.grey,
                         fontFamily: 'Montserrat'
                       ),
                       child: Expanded(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: kDefaultPadding, horizontal: 0.5 * kDefaultPadding),
-                          child: SizedBox(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  historyItem.title.toUpperCase(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
-                                  maxLines: 2,
-                                ),
-                                Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
-                              ],
-                            ),
+                          padding: const EdgeInsets.symmetric(vertical: kDefaultPadding, horizontal: 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                historyItem.title.toUpperCase(),
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
+                                maxLines: 2,
+                              ),
+                              Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
+                              Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
+                            ],
                           ),
                         ),
                       ),
@@ -121,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(builder: (context) => MapScreen(kPoint: AppLatLong.fromString(historyItem.latLong))),
                       );
                       },
-                    child: Icon(Icons.location_on),
+                    child: const Icon(Icons.location_on),
                   ),
                 )
               ],
@@ -146,24 +144,24 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: height! * 0.35,
                     width: width,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: kPrimaryColor,
                     ),
 
                     child: DefaultTextStyle(
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: kBackgroundColor,
                         fontSize: 20,
                         fontFamily: 'Montserrat',
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(kDefaultPadding),
+                        padding: const EdgeInsets.all(kDefaultPadding),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(width: double.infinity,),
+                            const SizedBox(width: double.infinity,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,21 +170,21 @@ class _HomePageState extends State<HomePage> {
                                   child: RichText(
                                     text: TextSpan(
                                       text: 'Hello\,\n',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 20,
                                         fontFamily: 'Montserrat',
                                       ),
                                       children: [
                                         TextSpan(
                                           text: userName,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.w800,
                                             fontSize: 24,
                                             fontFamily: 'Montserrat',
                                           ),
                                         ),
-                                        TextSpan(text: '!\n'),
-                                        TextSpan(
+                                        const TextSpan(text: '!\n'),
+                                        const TextSpan(
                                             text: 'Your points:'
                                         )
                                       ],
@@ -214,13 +212,13 @@ class _HomePageState extends State<HomePage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.local_fire_department,
                                         color: kSecondaryColor,
                                       ),
                                       Text(
                                         '$dayStreak day streak',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontFamily: 'Montserrat',
                                         ),
@@ -231,18 +229,18 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   height: height! * 0.4 * 0.02,
                                   width: width! - 2 * kDefaultPadding,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                       color: kBackgroundColor,
                                       borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
                                   ),
                                   alignment: Alignment.bottomLeft,
                                   child: Container(
                                     width: (width! - 2 * kDefaultPadding) * dayStreak! / 7,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         color: kSecondaryColor,
                                         borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
                                     ),
-                                    padding: EdgeInsets.all(2),
+                                    padding: const EdgeInsets.all(2),
                                   ),
                                 )
                               ],
@@ -253,7 +251,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Expanded(
-                    child: CarouselSlider(
+                    child: !historyItems.isEmpty ?
+                    CarouselSlider(
                       options: CarouselOptions(
                         height: height! * 0.5,
                         enlargeCenterPage: true,
@@ -267,13 +266,28 @@ class _HomePageState extends State<HomePage> {
                           },
                         );
                       }).toList(),
+                    ) : Container(
+                      padding: const EdgeInsets.all(1.5 * kDefaultPadding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('How to plant trees?\n', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
+                            Text('1) Prepare the proper planting hole\n'),
+                            Text('2) Plant high\n'),
+                            Text('3) Inspect the roots and disturb when necessary\n'),
+                            Text('4) Don’t amend the soil\n'),
+                            Text('5) Eliminate air pockets\n'),
+                            Text('6) Add mulch\n'),
+                            Text('7) Water Properly Until Established\n'),
+                          ]
+                      )
                     ),
                   )
                 ],
               );
             }
             else{
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
           },
         )

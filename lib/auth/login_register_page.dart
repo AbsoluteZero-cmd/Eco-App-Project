@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
       MyUser myUser = MyUser(uid: uid, name: name);
 
-      Auth().currentUser?.updateDisplayName(name);
+      await Auth().currentUser?.updateDisplayName(name);
       await ref.set(myUser.toMap());
 
     } on FirebaseAuthException catch (e) {

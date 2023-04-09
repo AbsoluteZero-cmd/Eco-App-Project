@@ -4,6 +4,7 @@ import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/my_classes.dart';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
+import 'package:eco_app_project/yandex_map/location_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -149,6 +150,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     await ref.update({
       "history_items": myUser.history_items + 1,
+      "points": myUser.points + currentPoints,
+      "was_today": true,
+      "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
 
     DatabaseReference item_ref = FirebaseDatabase.instance.ref("history/${uid}/${myUser.history_items}");
@@ -158,7 +162,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     await imgRef.putFile(_image);
     String imageUri = await imgRef.getDownloadURL();
 
-    final HistoryItem historyItem = HistoryItem(title: _input ?? 'no name', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: AppLatLong(lat: 1, long: 1).toString(), points: currentPoints);
+    final currentLocation = await LocationService().getCurrentLocation().toString();
+
+    final HistoryItem historyItem = HistoryItem(title: _input ?? 'plant${myUser.history_items}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation, points: currentPoints);
 
     print(historyItem.toMap());
 

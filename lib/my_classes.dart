@@ -23,6 +23,7 @@ class Plant {
     this.diseases.add(disease);
   }
 
+
   Map<String, dynamic> toMap() {
     return {
       "name": name,
@@ -72,6 +73,9 @@ class HistoryItem{
     return DateFormat('EEEE, MMM d, yyyy').format(date);
   }
 
+  AppLatLong getLatLong() {
+    return AppLatLong(lat: double.parse(latLong.substring(0, latLong.indexOf(' '))), long: double.parse(latLong.substring(latLong.indexOf(' ') + 1)));
+  }
 
   Map<String, dynamic> toMap() {
     return {
