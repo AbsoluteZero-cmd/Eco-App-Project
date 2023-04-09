@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? userName;
   MyUser? myUser;
-  final List<HistoryItem> historyItems = [];
+  List<HistoryItem> historyItems = [];
   int pointsCount = 0;
   int dayStreak = 0;
 
@@ -44,12 +44,15 @@ class _HomePageState extends State<HomePage> {
     DatabaseReference ref_history = FirebaseDatabase.instance.ref("history/${uid}");
     result = await ref_history.get();
 
+    List<HistoryItem> list = [];
     result.children.forEach((element) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final historyItem = HistoryItem.fromMap(data2);
       print(data2);
-      historyItems.add(historyItem);
+      list.add(historyItem);
     });
+
+    historyItems = list;
 
     return result;
   }
@@ -60,71 +63,80 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget historyCardBuilder(BuildContext context, HistoryItem historyItem) {
-    return Card(
-        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.2),
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return SizedBox(
+      width: width * 0.8,
+      height: height * 0.5,
+      child: Center(
+        child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.2),
+                child: Stack(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Image.network(
-                        historyItem.imageUri,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                        repeat: ImageRepeat.noRepeat,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.21,
-                      ),
-                    ),
-                    DefaultTextStyle(
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                        fontFamily: 'Montserrat'
-                      ),
-                      child: Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: kDefaultPadding, horizontal: 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                historyItem.title.toUpperCase(),
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
-                                maxLines: 2,
-                              ),
-                              Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
-                              Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
-                            ],
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.network(
+                            historyItem.imageUri,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                            repeat: ImageRepeat.noRepeat,
+                            width: width * 0.8,
+                            height: MediaQuery.of(context).size.height * 0.21,
                           ),
                         ),
+                        DefaultTextStyle(
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                            fontFamily: 'Montserrat'
+                          ),
+                          child: Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: kDefaultPadding, horizontal: 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    historyItem.title.toUpperCase(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
+                                    maxLines: 2,
+                                  ),
+                                  Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                  Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      right: 0,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapScreen(kPoint: AppLatLong.fromString(historyItem.latLong))),
+                          );
+                          },
+                        child: const Icon(Icons.location_on),
                       ),
                     )
                   ],
-                ),
-                Positioned(
-                  bottom: 20,
-                  right: 0,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MapScreen(kPoint: AppLatLong.fromString(historyItem.latLong))),
-                      );
-                      },
-                    child: const Icon(Icons.location_on),
-                  ),
                 )
-              ],
-            )
+            ),
         ),
+      ),
     );
   }
 
@@ -250,22 +262,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Expanded(
+                  Container(
+                    height: height * 0.55,
+                    width: width,
                     child: !historyItems.isEmpty ?
-                    CarouselSlider(
-                      options: CarouselOptions(
-                        height: height! * 0.5,
-                        enlargeCenterPage: true,
-                        enlargeFactor: 0.2,
-                        autoPlay: true,
-                      ),
-                      items: historyItems.map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return historyCardBuilder(context, i);
-                          },
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: historyItems.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 0.1 * width),
+                            child: historyCardBuilder(context, historyItems[index]),
+                          ),
                         );
-                      }).toList(),
+                      },
                     ) : Container(
                       padding: const EdgeInsets.all(1.5 * kDefaultPadding),
                       child: Column(

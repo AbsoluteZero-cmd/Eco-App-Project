@@ -164,7 +164,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     final currentLocation = await LocationService().getCurrentLocation();
 
-    final HistoryItem historyItem = HistoryItem(title: _input ?? 'plant${myUser.history_items}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints);
+    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? 'plant${myUser.history_items}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints);
 
     print(historyItem.toMap());
 
