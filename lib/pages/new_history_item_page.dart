@@ -162,9 +162,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     await imgRef.putFile(_image);
     String imageUri = await imgRef.getDownloadURL();
 
-    final currentLocation = await LocationService().getCurrentLocation().toString();
+    final currentLocation = await LocationService().getCurrentLocation();
 
-    final HistoryItem historyItem = HistoryItem(title: _input ?? 'plant${myUser.history_items}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation, points: currentPoints);
+    final HistoryItem historyItem = HistoryItem(title: _input ?? 'plant${myUser.history_items}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints);
 
     print(historyItem.toMap());
 

@@ -16,6 +16,7 @@ class LocationService implements AppLocation {
 
   @override
   Future<AppLatLong> getCurrentLocation() async {
+
     return Geolocator.getCurrentPosition().then((value) {
       return AppLatLong(lat: value.latitude, long: value.longitude);
     }).catchError(

@@ -38,6 +38,8 @@ dependencies:
   geolocator: ^9.0.2
   yandex_geocoder: ^2.1.0
 
+  geocoder: ^0.2.1
+
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.4
   firebase_database: ^10.0.9
@@ -47,6 +49,7 @@ dependencies:
   tflite: ^1.1.1
   meta: ^1.1.8
 
+  fluttertoast: ^8.2.1
 
   intl: ^0.17.0
 

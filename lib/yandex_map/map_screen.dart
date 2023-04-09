@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/location_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class MapScreen extends StatefulWidget {
@@ -90,6 +92,29 @@ class _MapScreenState extends State<MapScreen> {
 
     mapObjects.add(getPlacemarkMapObject(43.224173, 76.916591));
     mapObjects.add(getPlacemarkMapObject(40.730610, -73.935242));
+
+    final mapObject = CircleMapObject(
+      mapId: MapObjectId('rounded_area'),
+      circle: Circle(
+        center: Point(latitude: 43.225777, longitude: 76.927366),
+        radius: 100,
+      ),
+      strokeColor: Colors.green[700]!,
+      strokeWidth: 5,
+      fillColor: Colors.green[300]!,
+      onTap: (CircleMapObject self, Point point) async {
+        final address = await Geocoder.local.findAddressesFromCoordinates(Coordinates(43.225777, 76.927366));
+        var first = address.first;
+        Fluttertoast.showToast(
+            msg: first.addressLine,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+        );
+      },
+    );
+
+    mapObjects.add(mapObject);
   }
 
   @override
