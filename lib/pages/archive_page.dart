@@ -20,6 +20,8 @@ class _ArchivePageState extends State<ArchivePage> {
   late List<DropdownMenuItem<String>> sortingOptions;
   List<Plant> plants = [];
 
+  late final Future myFuture;
+
   @override
   initState(){
     super.initState();
@@ -29,16 +31,9 @@ class _ArchivePageState extends State<ArchivePage> {
       DropdownMenuItem(child: Text('By rarity'), value: '2',),
     ];
 
-    plants = [
-      Plant('Pine tree', 'High and smelly', 3, ''),
-      Plant('Magnolia', 'Cute', 4, 'https://static.vecteezy.com/system/resources/previews/009/390/943/original/watercolor-white-magnolia-flower-and-leaf-branch-bouquet-png.png'),
-      Plant('Grass', 'Totally normal', 1, 'https://purepng.com/public/uploads/large/purepng.com-grassgrasstype-of-plantgrasslandgrass-lawn-1411527053156hdv8f.png'),
-    ];
-
-    for(int i = 0; i < 4; i++) plants[1].addDisease(Disease('some shit' + i.toString(), 3, 'Blue points on the flowers'));
-
-
     _pageController = PageController(initialPage: 0, viewportFraction: 0.8);
+
+    myFuture = fetchData();
   }
 
   Future fetchData() async {
@@ -143,7 +138,7 @@ class _ArchivePageState extends State<ArchivePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: fetchData(),
+      future: myFuture,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           return Container(
@@ -176,10 +171,14 @@ class _ArchivePageState extends State<ArchivePage> {
                           _dropdownOption = value;
 
                           if(_dropdownOption == '1'){
-                            plants.sort((a, b) => a.name.compareTo(b.name));
+                            setState(() {
+                              plants.sort((a, b) => a.name.compareTo(b.name));
+                            });
                           }
                           else if(_dropdownOption == '2'){
-                            plants.sort((a, b) => a.rarity - b.rarity);
+                            setState(() {
+                              plants.sort((a, b) => a.rarity - b.rarity);
+                            });
                           }
                         });
                       },
