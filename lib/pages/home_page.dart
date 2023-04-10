@@ -26,6 +26,8 @@ class _HomePageState extends State<HomePage> {
   int pointsCount = 0;
   int dayStreak = 0;
 
+  late PageController _controller;
+
   Future fetchData() async {
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
@@ -60,6 +62,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    _controller = PageController();
   }
 
   Widget historyCardBuilder(BuildContext context, HistoryItem historyItem) {
@@ -267,7 +271,6 @@ class _HomePageState extends State<HomePage> {
                     width: width,
                     child: !historyItems.isEmpty ?
                     ListView.builder(
-                      shrinkWrap: true,
                       itemCount: historyItems.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {

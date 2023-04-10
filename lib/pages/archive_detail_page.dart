@@ -39,7 +39,7 @@ class ArchiveDetailPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        !plant.diseases.isNotEmpty ? Text('No diseases!') : Column(
+                        plant.diseases == null ? Text('No diseases!') : Column(
                           children: [
                             Text('Diseases'),
                             Container(

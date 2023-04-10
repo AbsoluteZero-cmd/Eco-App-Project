@@ -1,7 +1,9 @@
 import 'package:eco_app_project/pages/archive_detail_page.dart';
 import 'package:eco_app_project/my_classes.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../auth/auth.dart';
 import '../constants.dart';
 
 class ArchivePage extends StatefulWidget {
@@ -16,7 +18,7 @@ class _ArchivePageState extends State<ArchivePage> {
   late PageController _pageController;
   String? _dropdownOption;
   late List<DropdownMenuItem<String>> sortingOptions;
-  late List<Plant> plants;
+  List<Plant> plants = [];
 
   @override
   initState(){
@@ -37,6 +39,23 @@ class _ArchivePageState extends State<ArchivePage> {
 
 
     _pageController = PageController(initialPage: 0, viewportFraction: 0.8);
+  }
+
+  Future fetchData() async {
+    String? uid = Auth().currentUser?.uid.toString();
+    DatabaseReference ref = FirebaseDatabase.instance.ref("plants/");
+
+    final List<Plant> list = [];
+    var data = await ref.get();
+    data.children.forEach((element) {
+      var data2 = Map<String, dynamic>.from(element.value as Map);
+      final plant = Plant.fromMap(data2);
+      print(data2);
+      list.add(plant);
+    });
+
+    plants = list;
+    return data;
   }
 
   _plantSelector(index) {
@@ -123,58 +142,66 @@ class _ArchivePageState extends State<ArchivePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: kDefaultPadding * 1.2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-              child: Text(
-                  'Plants archive',
-                  style: TextStyle(
-                    fontSize: kFontTitle,
-                    fontWeight: FontWeight.bold
+    return FutureBuilder(
+      future: fetchData(),
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: kDefaultPadding * 1.2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                  child: Text(
+                    'Plants archive',
+                    style: TextStyle(
+                        fontSize: kFontTitle,
+                        fontWeight: FontWeight.bold
+                    ),
+
                   ),
-
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: DropdownButton<String>(
-                  hint: Text('Select sorting option'),
-                  isExpanded: true,
-                  items: sortingOptions,
-                  value: _dropdownOption,
-                  onChanged: (value) {
-                      setState(() {
-                        _dropdownOption = value;
-
-                        if(_dropdownOption == '1'){
-                          plants.sort((a, b) => a.name.compareTo(b.name));
-                        }
-                        else if(_dropdownOption == '2'){
-                          plants.sort((a, b) => a.rarity - b.rarity);
-                        }
-                      });
-                  },
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: DropdownButton<String>(
+                      hint: Text('Select sorting option'),
+                      isExpanded: true,
+                      items: sortingOptions,
+                      value: _dropdownOption,
+                      onChanged: (value) {
+                        setState(() {
+                          _dropdownOption = value;
+
+                          if(_dropdownOption == '1'){
+                            plants.sort((a, b) => a.name.compareTo(b.name));
+                          }
+                          else if(_dropdownOption == '2'){
+                            plants.sort((a, b) => a.rarity - b.rarity);
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: plants.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return _plantSelector(index);
+                      }),
+                )
+              ],
             ),
-            Expanded(
-              child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: plants.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return _plantSelector(index);
-                  }),
-            )
-          ],
-        ),
-      );
+          );
+        }
+        else return Center(child: CircularProgressIndicator());
+      },
+    );
   }
 }
 
