@@ -9,6 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
@@ -70,13 +71,43 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     );
 
 
+    print('confidence: ${output![0]["confidence"]}');
     setState(() {
       _outputs = output;
-      type_of_plant = _outputs![0]["label"];
+      type_of_plant = _outputs![0]["label"].toString().substring(2).replaceAll('_', ' ');
+      var list = type_of_plant.split(' ');
+      var confidence = 100 * output![0]["confidence"];
+
+      if(confidence < 0.9){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Navigation(),
+            )
+        );
+        Fluttertoast.showToast(
+          msg: 'Not a plant! Confidence: ${(confidence.round())}%',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+        );
+      }
+      else if(list[list.length - 1] == 'healthy'){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Navigation(),
+            )
+        );
+        Fluttertoast.showToast(
+          msg: 'The plant is healthy already!',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+        );
+      }
       print('my output: ${type_of_plant}');
     });
-
-    currentPoints = await calculatePoints(type_of_plant);
 
     print('my output: ${type_of_plant}');
   }
@@ -107,7 +138,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
             ),
             Flexible(
               child: Text(
-                '${type_of_plant} = ${currentPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
+                '${type_of_plant.split(' ').length > 2 ? type_of_plant.split(' ')[0] + '_' + type_of_plant.split(' ')[1] : type_of_plant.split(' ')[0]} = ${currentPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
                 maxLines: 2,
               ),
             ),
@@ -131,8 +162,18 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     );
   }
 
-  int calculatePoints(String plant_type) {
-    return 30;
+  Future<int> calculatePoints(String plant_type) async {
+    String name = type_of_plant.split(' ')[0];
+    if(type_of_plant.split(' ').length > 2){
+      name += '_' + type_of_plant.split(' ')[1];
+    }
+    print("plants/${name}");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("plants/${name}");
+    var data = await ref.get();
+    var data2 = Map<String, dynamic>.from(data.value as Map);
+    final plant = Plant.fromMap(data2);
+    print(data2);
+    return plant.rarity * 10;
   }
 
   Future<void> uploadData() async {

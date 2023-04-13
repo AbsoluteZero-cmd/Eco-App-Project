@@ -94,7 +94,10 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingItem("Email", email, true),
             ElevatedButton(
                 onPressed: signOut,
-                child: Text('Sign out')
+                child: Container(
+                    width: MediaQuery.of(context).size.width - 2.4 * kDefaultPadding,
+                    child: Center(child: Text('Sign out'))
+                )
             )
           ],
         ),

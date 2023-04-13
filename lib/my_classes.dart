@@ -52,6 +52,19 @@ class Disease {
     this.infection_level = infection_level;
     this.description = description;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "description": description,
+      "infection_level": infection_level,
+    };
+  }
+
+  Disease.fromMap(Map<String, dynamic> addressMap)
+      : name = addressMap["name"],
+        description = addressMap["description"],
+        infection_level = addressMap["infection_level"];
 }
 
 class HistoryItem{

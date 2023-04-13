@@ -11,7 +11,7 @@ class ArchiveDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(kDefaultPadding),
+        padding: EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 2 * kDefaultPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,7 +27,7 @@ class ArchiveDetailPage extends StatelessWidget {
             Expanded(
                 child: Column(
                   // crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
                       plant.name,
@@ -36,21 +36,21 @@ class ArchiveDetailPage extends StatelessWidget {
                       ),
                     ),
                     Text(plant.description),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        plant.diseases == null ? Text('No diseases!') : Column(
-                          children: [
-                            Text('Diseases'),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              child: diseasesList(),
-                            )
-                          ],
-                        )
-                      ],
-                    )
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     plant.diseases == null ? Text('No diseases!') : Column(
+                    //       children: [
+                    //         Text('Diseases'),
+                    //         Container(
+                    //           width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
+                    //           height: MediaQuery.of(context).size.height * 0.1,
+                    //           child: diseasesList(),
+                    //         )
+                    //       ],
+                    //     )
+                    //   ],
+                    // )
                   ],
                 )
             )
