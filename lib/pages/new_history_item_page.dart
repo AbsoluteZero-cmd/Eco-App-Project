@@ -37,6 +37,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   final ImagePicker _picker = ImagePicker();
   String? _input;
   bool _isLoading = false;
+  int mPoints = 0;
 
   @override
   void initState(){
@@ -108,8 +109,12 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       }
       print('my output: ${type_of_plant}');
     });
+    currentPoints = await calculatePoints(type_of_plant);
 
-    print('my output: ${type_of_plant}');
+    setState(() {
+      mPoints = currentPoints;
+    });
+    print('my output: ${type_of_plant}; my points: ${currentPoints}');
   }
 
   @override
@@ -138,7 +143,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
             ),
             Flexible(
               child: Text(
-                '${type_of_plant.split(' ').length > 2 ? type_of_plant.split(' ')[0] + '_' + type_of_plant.split(' ')[1] : type_of_plant.split(' ')[0]} = ${currentPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
+                '${type_of_plant.split(' ').length > 2 ? type_of_plant.split(' ')[0] + '_' + type_of_plant.split(' ')[1] : type_of_plant.split(' ')[0]} = ${mPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
                 maxLines: 2,
               ),
             ),
