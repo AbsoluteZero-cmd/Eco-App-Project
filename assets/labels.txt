@@ -4,5 +4,3 @@
 3 arjun_healthy
 4 mango_diseased
 5 mango_healthy
-6 oak_tree_healthy
-7 oak_tree_diseased
