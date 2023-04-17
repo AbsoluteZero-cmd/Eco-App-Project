@@ -1,6 +1,6 @@
-0 alstonia_scholaris_diseased 
-1 alstonia_scholaris_healthy
-2 arjun_diseased
-3 arjun_healthy
-4 mango_diseased
-5 mango_healthy
+0 mango_healthy
+1 mango_diseased
+2 arjun_healthy
+3 arjun_diseased
+4 alstonia_scholaris_healthy
+5 alstonia_scholaris_diseased

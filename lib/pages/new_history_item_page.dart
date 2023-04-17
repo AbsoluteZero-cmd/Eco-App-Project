@@ -75,40 +75,41 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     print('confidence: ${output![0]["confidence"]}');
     setState(() {
       _outputs = output;
-      type_of_plant = _outputs![0]["label"].toString().substring(2).replaceAll('_', ' ');
+      type_of_plant =
+          _outputs![0]["label"].toString().substring(2).replaceAll('_', ' ');
       var list = type_of_plant.split(' ');
       var confidence = 100 * output![0]["confidence"];
-
-      if(confidence < 0.9){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Navigation(),
-            )
-        );
-        Fluttertoast.showToast(
-          msg: 'Not a plant! Confidence: ${(confidence.round())}%',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 1,
-        );
-      }
-      else if(list[list.length - 1] == 'healthy'){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Navigation(),
-            )
-        );
-        Fluttertoast.showToast(
-          msg: 'The plant is healthy already!',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 1,
-        );
-      }
-      print('my output: ${type_of_plant}');
     });
+    //   if(confidence < 0.9){
+    //     Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //           builder: (context) => Navigation(),
+    //         )
+    //     );
+    //     Fluttertoast.showToast(
+    //       msg: 'Not a plant! Confidence: ${(confidence.round())}%',
+    //       toastLength: Toast.LENGTH_LONG,
+    //       gravity: ToastGravity.TOP,
+    //       timeInSecForIosWeb: 1,
+    //     );
+    //   }
+    //   else if(list[list.length - 1] == 'healthy'){
+    //     Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //           builder: (context) => Navigation(),
+    //         )
+    //     );
+    //     Fluttertoast.showToast(
+    //       msg: 'The plant is healthy already!',
+    //       toastLength: Toast.LENGTH_LONG,
+    //       gravity: ToastGravity.TOP,
+    //       timeInSecForIosWeb: 1,
+    //     );
+    //   }
+    //   print('my output: ${type_of_plant}');
+    // });
     currentPoints = await calculatePoints(type_of_plant);
 
     setState(() {
