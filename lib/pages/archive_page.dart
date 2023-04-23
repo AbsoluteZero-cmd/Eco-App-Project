@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_app_project/pages/archive_detail_page.dart';
 import 'package:eco_app_project/my_classes.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -45,7 +46,6 @@ class _ArchivePageState extends State<ArchivePage> {
     for (var element in data.children) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final plant = Plant.fromMap(data2);
-      print(data2);
       list.add(plant);
     }
 
@@ -118,11 +118,12 @@ class _ArchivePageState extends State<ArchivePage> {
                   borderRadius: BorderRadius.circular(20.0),
                   child: Hero(
                     tag: 'plant${plants[index].name}',
-                    child: Image(
+                    child: CachedNetworkImage(
                       fit: BoxFit.fitWidth,
                       height: 400,
                       // 'assets/pine_tree_placeholder.png'
-                      image: plants[index].imageURL != '' ? NetworkImage(plants[index].imageURL) : AssetImage('assets/pine_tree_placeholder.png') as ImageProvider,
+                      imageUrl: plants[index].imageURL,
+                      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                     ),
                   ),
                 ),
