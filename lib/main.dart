@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:eco_app_project/auth/login_register_page.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/navigation.dart';

@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       String? uid = Auth().currentUser?.uid.toString() ?? 'no-uid';
-      DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
+      DatabaseReference ref = FirebaseDatabase.instance.ref("users/$uid");
       var generator = UsernameGenerator();
       String name = generator.generateRandom().substring(0, 8);
 

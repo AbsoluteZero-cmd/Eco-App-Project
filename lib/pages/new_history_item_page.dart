@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/my_classes.dart';
-import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/location_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -78,7 +76,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       type_of_plant =
           _outputs![0]["label"].toString().substring(2).replaceAll('_', ' ');
       var list = type_of_plant.split(' ');
-      var confidence = 100 * output![0]["confidence"];
+      var confidence = 100 * output[0]["confidence"];
     // });
       if(confidence < 0.7){
         Navigator.push(
@@ -108,14 +106,14 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
           timeInSecForIosWeb: 1,
         );
       }
-      print('my output: ${type_of_plant}');
+      print('my output: $type_of_plant');
     });
     currentPoints = await calculatePoints(type_of_plant);
 
     setState(() {
       mPoints = currentPoints;
     });
-    print('my output: ${type_of_plant}; my points: ${currentPoints}');
+    print('my output: $type_of_plant; my points: $currentPoints');
   }
 
   @override
@@ -144,7 +142,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
             ),
             Flexible(
               child: Text(
-                '${type_of_plant.split(' ').length > 2 ? type_of_plant.split(' ')[0] + '_' + type_of_plant.split(' ')[1] : type_of_plant.split(' ')[0]} = ${mPoints} points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
+                '${type_of_plant.split(' ').length > 2 ? '${type_of_plant.split(' ')[0]}_${type_of_plant.split(' ')[1]}' : type_of_plant.split(' ')[0]} = $mPoints points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
                 maxLines: 2,
               ),
             ),
@@ -168,13 +166,13 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     );
   }
 
-  Future<int> calculatePoints(String plant_type) async {
+  Future<int> calculatePoints(String plantType) async {
     String name = type_of_plant.split(' ')[0];
     if(type_of_plant.split(' ').length > 2){
-      name += '_' + type_of_plant.split(' ')[1];
+      name += '_${type_of_plant.split(' ')[1]}';
     }
-    print("plants/${name}");
-    DatabaseReference ref = FirebaseDatabase.instance.ref("plants/${name}");
+    print("plants/$name");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("plants/$name");
     var data = await ref.get();
     var data2 = Map<String, dynamic>.from(data.value as Map);
     final plant = Plant.fromMap(data2);
@@ -188,7 +186,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     });
     
     String? uid = Auth().currentUser?.uid.toString();
-    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users/$uid");
 
     var result = await ref.get();
     final data = Map<String, dynamic>.from(result.value as Map);
@@ -202,10 +200,10 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
 
-    DatabaseReference item_ref = FirebaseDatabase.instance.ref("history/${uid}/${myUser.history_items}");
+    DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${myUser.history_items}");
 
 
-    Reference imgRef = FirebaseStorage.instance.ref("history/${uid}/${myUser.history_items}");
+    Reference imgRef = FirebaseStorage.instance.ref("history/$uid/${myUser.history_items}");
     await imgRef.putFile(_image);
     String imageUri = await imgRef.getDownloadURL();
 
@@ -215,7 +213,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     print(historyItem.toMap());
 
-    await item_ref.set(historyItem.toMap());
+    await itemRef.set(historyItem.toMap());
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
   }

@@ -1,7 +1,5 @@
 
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Plant {
@@ -20,7 +18,7 @@ class Plant {
   }
 
   void addDisease(Disease disease){
-    this.diseases.add(disease);
+    diseases.add(disease);
   }
 
 

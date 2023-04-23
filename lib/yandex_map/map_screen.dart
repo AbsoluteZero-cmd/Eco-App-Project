@@ -94,15 +94,15 @@ class _MapScreenState extends State<MapScreen> {
 
   Future fetchData() async {
     String? uid = Auth().currentUser?.uid.toString();
-    DatabaseReference ref_history = FirebaseDatabase.instance.ref("history/${uid}");
-    var result = await ref_history.get();
+    DatabaseReference refHistory = FirebaseDatabase.instance.ref("history/$uid");
+    var result = await refHistory.get();
 
     List<MapObject> objects = [];
-    result.children.forEach((element) {
+    for (var element in result.children) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final historyItem = HistoryItem.fromMap(data2);
       objects.add(getPlacemarkMapObject(historyItem.getLatLong().lat, historyItem.getLatLong().long, historyItem.date));
-    });
+    }
 
     setState(() {
       mapObjects.addAll(objects);

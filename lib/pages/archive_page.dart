@@ -27,8 +27,8 @@ class _ArchivePageState extends State<ArchivePage> {
     super.initState();
 
     sortingOptions = [
-      DropdownMenuItem(child: Text('By name'), value: '1',),
-      DropdownMenuItem(child: Text('By rarity'), value: '2',),
+      DropdownMenuItem(value: '1',child: Text('By name'),),
+      DropdownMenuItem(value: '2',child: Text('By rarity'),),
     ];
 
     _pageController = PageController(initialPage: 0, viewportFraction: 0.8);
@@ -42,12 +42,12 @@ class _ArchivePageState extends State<ArchivePage> {
 
     final List<Plant> list = [];
     var data = await ref.get();
-    data.children.forEach((element) {
+    for (var element in data.children) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final plant = Plant.fromMap(data2);
       print(data2);
       list.add(plant);
-    });
+    }
 
     plants = list;
     return data;
@@ -117,7 +117,7 @@ class _ArchivePageState extends State<ArchivePage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: Hero(
-                    tag: 'plant' + plants[index].name,
+                    tag: 'plant${plants[index].name}',
                     child: Image(
                       fit: BoxFit.fitWidth,
                       height: 400,
@@ -198,7 +198,9 @@ class _ArchivePageState extends State<ArchivePage> {
             ),
           );
         }
-        else return Center(child: CircularProgressIndicator());
+        else {
+          return Center(child: CircularProgressIndicator());
+        }
       },
     );
   }

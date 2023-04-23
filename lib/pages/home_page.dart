@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
@@ -8,7 +8,6 @@ import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/map_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../my_classes.dart';
 
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   Future fetchData() async {
     String? uid = Auth().currentUser?.uid.toString();
-    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${uid}");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users/$uid");
 
     userName = Auth().currentUser!.displayName.toString();
 
@@ -43,16 +42,16 @@ class _HomePageState extends State<HomePage> {
     pointsCount = myUser!.points;
     dayStreak = myUser!.days_streak;
 
-    DatabaseReference ref_history = FirebaseDatabase.instance.ref("history/${uid}");
-    result = await ref_history.get();
+    DatabaseReference refHistory = FirebaseDatabase.instance.ref("history/$uid");
+    result = await refHistory.get();
 
     List<HistoryItem> list = [];
-    result.children.forEach((element) {
+    for (var element in result.children) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final historyItem = HistoryItem.fromMap(data2);
       print(data2);
       list.add(historyItem);
-    });
+    }
 
     historyItems = list;
 
@@ -86,13 +85,14 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Image.network(
-                            historyItem.imageUri,
+                          child: CachedNetworkImage(
+                            imageUrl: historyItem.imageUri,
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                             repeat: ImageRepeat.noRepeat,
                             width: width * 0.8,
                             height: MediaQuery.of(context).size.height * 0.21,
+                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                           ),
                         ),
                         DefaultTextStyle(
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
               return Column(
                 children: [
                   Container(
-                    height: height! * 0.35,
+                    height: height* 0.35,
                     width: width,
                     decoration: const BoxDecoration(
                       color: kPrimaryColor,
@@ -183,9 +183,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
+                                  width: width* 0.5 - kDefaultPadding,
                                   child: RichText(
                                     text: TextSpan(
-                                      text: 'Hello\,\n',
+                                      text: 'Hello,\n',
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontFamily: 'Montserrat',
@@ -206,11 +207,10 @@ class _HomePageState extends State<HomePage> {
                                       ],
                                     ),
                                   ),
-                                  width: width! * 0.5 - kDefaultPadding,
                                 ),
                                 Flexible(
                                   child: Text(
-                                    pointsCount! <= 99999 ? '$pointsCount' : '99999',
+                                    pointsCount<= 99999 ? '$pointsCount' : '99999',
                                     style: TextStyle(
                                       fontSize: min(56, 64 / (pointsCount.toString().length) * 3.5),
                                       fontWeight: FontWeight.w800,
@@ -243,15 +243,15 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Container(
-                                  height: height! * 0.4 * 0.02,
-                                  width: width! - 2 * kDefaultPadding,
+                                  height: height* 0.4 * 0.02,
+                                  width: width- 2 * kDefaultPadding,
                                   decoration: const BoxDecoration(
                                       color: kBackgroundColor,
                                       borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
                                   ),
                                   alignment: Alignment.bottomLeft,
                                   child: Container(
-                                    width: (width! - 2 * kDefaultPadding) * dayStreak! / 7,
+                                    width: (width- 2 * kDefaultPadding) * dayStreak/ 7,
                                     decoration: const BoxDecoration(
                                         color: kSecondaryColor,
                                         borderRadius: BorderRadius.all(Radius.circular(kBorderRadius))
@@ -266,10 +266,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: height * 0.55,
                     width: width,
-                    child: !historyItems.isEmpty ?
+                    child: historyItems.isNotEmpty ?
                     ListView.builder(
                       itemCount: historyItems.length,
                       scrollDirection: Axis.horizontal,
@@ -285,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(1.5 * kDefaultPadding),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text('How to plant trees?\n', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
                             Text('1) Prepare the proper planting hole\n'),
                             Text('2) Plant high\n'),

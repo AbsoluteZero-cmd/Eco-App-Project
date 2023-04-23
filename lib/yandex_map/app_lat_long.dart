@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class AppLatLong {
   final double lat;
@@ -12,7 +11,7 @@ class AppLatLong {
   @override
   String toString() {
     // TODO: implement toString
-    return lat.toString() + ' ' + long.toString();
+    return '$lat $long';
   }
 
   AppLatLong.fromString(String latlong):

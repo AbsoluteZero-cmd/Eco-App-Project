@@ -17,7 +17,7 @@ class ArchiveDetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Hero(
-              tag: 'plant' + plant.name,
+              tag: 'plant${plant.name}',
               child: Image(
                 fit: BoxFit.fitWidth,
                 height: 500,
