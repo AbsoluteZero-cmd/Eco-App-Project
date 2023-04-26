@@ -36,21 +36,6 @@ class ArchiveDetailPage extends StatelessWidget {
                       ),
                     ),
                     Text(plant.description),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     plant.diseases == null ? Text('No diseases!') : Column(
-                    //       children: [
-                    //         Text('Diseases'),
-                    //         Container(
-                    //           width: MediaQuery.of(context).size.width - 2 * kDefaultPadding,
-                    //           height: MediaQuery.of(context).size.height * 0.1,
-                    //           child: diseasesList(),
-                    //         )
-                    //       ],
-                    //     )
-                    //   ],
-                    // )
                   ],
                 )
             )

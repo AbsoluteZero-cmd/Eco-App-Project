@@ -148,13 +148,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (isEmail) {
                         setState(() {
                           email = newValue;
-                          // currentUser?.updateEmail("janeq@example.com");
                           FirebaseAuth.instance.currentUser?.updateEmail(email);
                         });
                       } else {
                         setState(() {
                           username = newValue;
-                          // currentUser?.updateEmail("janeq@example.com");
                           FirebaseAuth.instance.currentUser
                               ?.updateDisplayName(username);
                         });

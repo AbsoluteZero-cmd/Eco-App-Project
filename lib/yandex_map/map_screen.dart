@@ -114,9 +114,6 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _initPermission().ignore();
 
-    // mapObjects.add(getPlacemarkMapObject(43.224173, 76.916591));
-    // mapObjects.add(getPlacemarkMapObject(40.730610, -73.935242));
-
     final mapObject = CircleMapObject(
       mapId: MapObjectId('rounded_area'),
       circle: Circle(

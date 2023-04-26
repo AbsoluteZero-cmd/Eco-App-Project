@@ -93,7 +93,6 @@ class _ArchivePageState extends State<ArchivePage> {
                         'Rarity',
                         style: TextStyle(
                             color: Colors.white,
-                            // fontWeight: FontWeight.w600,
                             fontSize: kFontTitle * 0.8,
                         )
                     ),
@@ -121,7 +120,6 @@ class _ArchivePageState extends State<ArchivePage> {
                     child: CachedNetworkImage(
                       fit: BoxFit.fitWidth,
                       height: 400,
-                      // 'assets/pine_tree_placeholder.png'
                       imageUrl: plants[index].imageURL,
                       placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                     ),
