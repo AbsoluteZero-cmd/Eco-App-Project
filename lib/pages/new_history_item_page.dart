@@ -33,9 +33,13 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   final currentDate = DateTime.now();
   int currentPoints = 0;
   final ImagePicker _picker = ImagePicker();
+  final _formKey = GlobalKey<FormState>();
   String? _input;
   bool _isLoading = false;
   int mPoints = 0;
+
+
+  TextEditingController _controller1 = new TextEditingController(text: 'Initial value');
 
   @override
   void initState(){
@@ -78,6 +82,8 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       var list = type_of_plant.split(' ');
       var confidence = 100 * output[0]["confidence"];
     // });
+
+      /*
       if(confidence < 0.7){
         Navigator.push(
             context,
@@ -106,6 +112,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
           timeInSecForIosWeb: 1,
         );
       }
+      */
       print('my output: $type_of_plant');
     });
     currentPoints = await calculatePoints(type_of_plant);
@@ -114,6 +121,68 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       mPoints = currentPoints;
     });
     print('my output: $type_of_plant; my points: $currentPoints');
+  }
+
+  showPopupForm() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Stack(
+              children: <Widget>[
+                Positioned(
+                  right: -40.0,
+                  top: -40.0,
+                  child: InkResponse(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      child: Icon(Icons.close),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              hintText: 'Enter plant type'
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              hintText: 'Enter plant name'
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          child: Text("Upload"),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   @override
@@ -199,6 +268,8 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       "was_today": true,
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
+
+    // String id = Date().getTime().toString();
 
     DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${myUser.history_items}");
 
