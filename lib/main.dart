@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepOrange).copyWith(secondary: kSecondaryColor),
       ),
-      home: StreamBuilder(
+      home:  StreamBuilder(
         stream: Auth().authStateChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
