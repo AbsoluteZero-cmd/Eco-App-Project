@@ -269,18 +269,19 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
 
-    // String id = Date().getTime().toString();
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+    print('time format: ${id}');
 
-    DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${myUser.history_items}");
+    DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${id}");
 
 
-    Reference imgRef = FirebaseStorage.instance.ref("history/$uid/${myUser.history_items}");
+    Reference imgRef = FirebaseStorage.instance.ref("history/$uid/${id}");
     await imgRef.putFile(_image);
     String imageUri = await imgRef.getDownloadURL();
 
     final currentLocation = await LocationService().getCurrentLocation();
 
-    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? 'plant${myUser.history_items}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints);
+    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints);
 
     print(historyItem.toMap());
 

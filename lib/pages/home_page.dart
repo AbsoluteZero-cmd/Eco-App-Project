@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     var result = await ref.get();
     final data = Map<String, dynamic>.from(result.value as Map);
     myUser = MyUser.fromMap(data);
-    print('my name: ${myUser!.name}');
 
 
     pointsCount = myUser!.points;
@@ -49,7 +48,6 @@ class _HomePageState extends State<HomePage> {
     for (var element in result.children) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final historyItem = HistoryItem.fromMap(data2);
-      print(data2);
       list.add(historyItem);
     }
 

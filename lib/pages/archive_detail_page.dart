@@ -19,11 +19,6 @@ class ArchiveDetailPage extends StatelessWidget {
           children: [
             Hero(
               tag: 'plant${plant.name}',
-              // child: Image(
-              //   fit: BoxFit.fitWidth,
-              //   height: 500,
-              //   image: plant.imageURL != '' ? NetworkImage(plant.imageURL) : AssetImage('assets/pine_tree_placeholder.png') as ImageProvider
-              // ),
               child: CachedNetworkImage(
                 fit: BoxFit.fitWidth,
                 height: 500,
