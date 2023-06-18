@@ -71,13 +71,15 @@ class HistoryItem{
   int points;
   String date;
   String latLong;
+  String description;
 
   HistoryItem({
       required this.title,
       required this.imageUri,
       required this.latLong,
       required this.date,
-      required this.points}
+      required this.points,
+      required this.description}
       );
 
   static getDate(DateTime date){
@@ -95,6 +97,7 @@ class HistoryItem{
       "points": points,
       "date": date,
       "latLong": latLong,
+      "description": description,
     };
   }
 
@@ -103,5 +106,6 @@ class HistoryItem{
         imageUri = addressMap["imageUri"],
         points = addressMap["points"],
         date = addressMap["date"],
-        latLong = addressMap["latLong"];
+        latLong = addressMap["latLong"],
+        description = addressMap["description"];
 }

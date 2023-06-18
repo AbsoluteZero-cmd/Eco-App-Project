@@ -2,6 +2,7 @@ import 'package:eco_app_project/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../auth/auth.dart';
+import '../auth/login_register_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> signOut() async {
     await Auth().signOut();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   Widget SettingItem(String title, String val, bool isEmail) {

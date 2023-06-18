@@ -35,6 +35,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   final ImagePicker _picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   String? _input;
+  String _input_description = '';
   bool _isLoading = false;
   int mPoints = 0;
 
@@ -188,49 +189,68 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: kDefaultPadding * 1.5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Plant\'s form',
-              style: TextStyle(
-                fontSize: kFontTitle,
-                fontWeight: FontWeight.bold,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 1.5 * kDefaultPadding),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Форма',
+                        style: TextStyle(
+                          fontSize: kFontTitle,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.file(
+                            _image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      _isLoading ? LinearProgressIndicator()
+                      : TextField(
+                        maxLines: 1,
+                        maxLength: 30,
+                        decoration: InputDecoration(
+                          labelText: 'Вид растения',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                        ),
+                        onChanged: (text) {
+                          _input = text;
+                        },
+                      ),
+                    TextField(
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        labelText: 'Описание болезни',
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          _input_description = text;
+                        });
+                      },
+                    ),
+                      ElevatedButton(
+                        onPressed: uploadData,
+                        child: Text('Загрузить'),
+                      )
+                    ],
+                )
               ),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.file(
-                _image,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Flexible(
-              child: Text(
-                '${type_of_plant.split(' ').length > 2 ? '${type_of_plant.split(' ')[0]}_${type_of_plant.split(' ')[1]}' : type_of_plant.split(' ')[0]} = $mPoints points \n${DateFormat('EEEE, MMM d, yyyy').format(currentDate)}',
-                maxLines: 2,
-              ),
-            ),
-            _isLoading ? LinearProgressIndicator()
-            : TextField(
-              maxLines: 1,
-              decoration: InputDecoration(
-                hintText: 'Input your plant\'s name',
-              ),
-              onChanged: (text) {
-                _input = text;
-              },
-            ),
-            ElevatedButton(
-              onPressed: uploadData,
-              child: Text('Upload'),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -263,7 +283,6 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
 
     await ref.update({
-      "history_items": myUser.history_items + 1,
       "points": myUser.points + currentPoints,
       "was_today": true,
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
@@ -281,7 +300,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     final currentLocation = await LocationService().getCurrentLocation();
 
-    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints);
+    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints, description: _input_description);
 
     print(historyItem.toMap());
 
