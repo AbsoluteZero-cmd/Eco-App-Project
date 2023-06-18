@@ -1,4 +1,5 @@
 import 'package:eco_app_project/auth/user_model.dart';
+import 'package:eco_app_project/navigation.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,8 @@ class _LoginPageState extends State<LoginPage> {
         email: _controllerEmail.text,
         password: _controllerPassword.text,
       );
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -48,6 +51,9 @@ class _LoginPageState extends State<LoginPage> {
 
       await Auth().currentUser?.updateDisplayName(name);
       await ref.set(myUser.toMap());
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
+      Navigator.pop(context);
 
     } on FirebaseAuthException catch (e) {
       setState(() {

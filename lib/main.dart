@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         stream: Auth().authStateChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            // return Navigation(cameras: cameras);
             return Navigation();
           } else {
             return const LoginPage();

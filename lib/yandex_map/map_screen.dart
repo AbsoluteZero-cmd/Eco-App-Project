@@ -41,13 +41,6 @@ class _MapScreenState extends State<MapScreen> {
       mapId: MapObjectId(lat.toString() + long.toString()),
       point: Point(latitude: lat, longitude: long),
       opacity: 1,
-      // icon: PlacemarkIcon.single(
-      //     PlacemarkIconStyle(
-      //       image: BitmapDescriptor.fromAssetImage('assets/Yandex_Maps_icon.png'),
-      //       scale: 0.05,
-      //       rotationType: RotationType.noRotation,
-      //     )
-      // ),
       onTap: (mapObject, point) {
         showModalBottomSheet<void>(
           context: context,
@@ -145,21 +138,37 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future fetchData() async {
-    String? uid = Auth().currentUser?.uid.toString();
-    DatabaseReference refHistory = FirebaseDatabase.instance.ref("history/$uid");
-    var result = await refHistory.get();
-
     List<MapObject> objects = [];
-    for (var element in result.children) {
-      var data2 = Map<String, dynamic>.from(element.value as Map);
-      final historyItem = HistoryItem.fromMap(data2);
-      objects.add(getPlacemarkMapObject(historyItem));
+    // String? uid = Auth().currentUser?.uid.toString();
+    // DatabaseReference refHistory = FirebaseDatabase.instance.ref("history/$uid");
+    // var result = await refHistory.get();
+    //
+    // List<MapObject> objects = [];
+    // for (var element in result.children) {
+    //   var data2 = Map<String, dynamic>.from(element.value as Map);
+    //   final historyItem = HistoryItem.fromMap(data2);
+    //   objects.add(getPlacemarkMapObject(historyItem));
+    // }
+    //
+
+
+    DatabaseReference reference = FirebaseDatabase.instance.ref("history");
+    var result = await reference.get();
+    for(var i in result.children){
+      print('my result: ${i.key}');
+      for(var element in i.children){
+        print('my child of ${i.key} is ${element.key}');
+        var data2 = Map<String, dynamic>.from(element.value as Map);
+        final historyItem = HistoryItem.fromMap(data2);
+        objects.add(getPlacemarkMapObject(historyItem));
+        print("my object ${data2}");
+      }
     }
+
 
     setState(() {
       mapObjects.addAll(objects);
     });
-
   }
 
   @override

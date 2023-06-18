@@ -28,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> signOut() async {
     await Auth().signOut();
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.pop(context);
   }
 
   Widget SettingItem(String title, String val, bool isEmail) {
