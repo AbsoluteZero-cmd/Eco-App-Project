@@ -283,13 +283,12 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
 
     await ref.update({
-      "points": myUser.points + currentPoints,
+      "points": myUser.points + 100,
       "was_today": true,
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
 
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-    print('time format: ${id}');
 
     DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${id}");
 
@@ -300,7 +299,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     final currentLocation = await LocationService().getCurrentLocation();
 
-    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints, description: _input_description);
+    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints, description: _input_description, id: id);
 
     print(historyItem.toMap());
 

@@ -155,13 +155,10 @@ class _MapScreenState extends State<MapScreen> {
     DatabaseReference reference = FirebaseDatabase.instance.ref("history");
     var result = await reference.get();
     for(var i in result.children){
-      print('my result: ${i.key}');
       for(var element in i.children){
-        print('my child of ${i.key} is ${element.key}');
         var data2 = Map<String, dynamic>.from(element.value as Map);
         final historyItem = HistoryItem.fromMap(data2);
         objects.add(getPlacemarkMapObject(historyItem));
-        print("my object ${data2}");
       }
     }
 

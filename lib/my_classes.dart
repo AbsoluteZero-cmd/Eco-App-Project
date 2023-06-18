@@ -72,6 +72,7 @@ class HistoryItem{
   String date;
   String latLong;
   String description;
+  String id;
 
   HistoryItem({
       required this.title,
@@ -79,8 +80,9 @@ class HistoryItem{
       required this.latLong,
       required this.date,
       required this.points,
-      required this.description}
-      );
+      required this.description,
+      required this.id,
+  });
 
   static getDate(DateTime date){
     return DateFormat('EEEE, MMM d, yyyy').format(date);
@@ -98,6 +100,7 @@ class HistoryItem{
       "date": date,
       "latLong": latLong,
       "description": description,
+      "id": id,
     };
   }
 
@@ -107,5 +110,6 @@ class HistoryItem{
         points = addressMap["points"],
         date = addressMap["date"],
         latLong = addressMap["latLong"],
-        description = addressMap["description"];
+        description = addressMap["description"],
+        id = addressMap["id"];
 }

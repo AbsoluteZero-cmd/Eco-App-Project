@@ -7,6 +7,7 @@ import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/map_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../my_classes.dart';
@@ -45,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     result = await refHistory.get();
 
     List<HistoryItem> list = [];
+
     for (var element in result.children) {
       var data2 = Map<String, dynamic>.from(element.value as Map);
       final historyItem = HistoryItem.fromMap(data2);
@@ -52,7 +54,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     historyItems = list;
-
     return result;
   }
 
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     _controller = PageController();
   }
 
-  Widget historyCardBuilder(BuildContext context, HistoryItem historyItem) {
+  Widget historyCardBuilder(BuildContext context, HistoryItem historyItem, int index) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -125,13 +126,10 @@ class _HomePageState extends State<HomePage> {
                       bottom: 20,
                       right: 0,
                       child: FloatingActionButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MapScreen(kPoint: AppLatLong.fromString(historyItem.latLong))),
-                          );
-                          },
-                        child: const Icon(Icons.location_on),
+                        onPressed: () async {
+                          await deleteHistoryItem(historyItem.id, index);
+                        },
+                        child: const Icon(Icons.delete),
                       ),
                     )
                   ],
@@ -275,25 +273,13 @@ class _HomePageState extends State<HomePage> {
                         return Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 24, horizontal: 0.1 * width),
-                            child: historyCardBuilder(context, historyItems[index]),
+                            child: historyCardBuilder(context, historyItems[index], index),
                           ),
                         );
                       },
                     ) : Container(
                       padding: const EdgeInsets.all(1.5 * kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text('How to plant trees?\n', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
-                            Text('1) Prepare the proper planting hole\n'),
-                            Text('2) Plant high\n'),
-                            Text('3) Inspect the roots and disturb when necessary\n'),
-                            Text('4) Don’t amend the soil\n'),
-                            Text('5) Eliminate air pockets\n'),
-                            Text('6) Add mulch\n'),
-                            Text('7) Water Properly Until Established\n'),
-                          ]
-                      )
+                      child: Center(child: Text('Пока что тут пусто'),)
                     ),
                   )
                 ],
@@ -305,5 +291,16 @@ class _HomePageState extends State<HomePage> {
           },
         )
     );
+  }
+
+  Future<void> deleteHistoryItem(String id, int index) async {
+    String? uid = Auth().currentUser?.uid.toString();
+    DatabaseReference reference = FirebaseDatabase.instance.ref('/history/${uid}/${id}');
+    print('my ref ${reference.path}');
+    reference.remove();
+
+    setState(() {
+      historyItems.removeAt(index);
+    });
   }
 }
