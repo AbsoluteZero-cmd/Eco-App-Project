@@ -21,8 +21,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   initState() {
     super.initState();
-    username = currentUser?.displayName ?? 'no name';
-    email = currentUser?.email ?? 'no email';
+    username = currentUser?.displayName ?? 'Нет имени';
+    email = currentUser?.email ?? 'Нет почты';
   }
 
   Future<void> signOut() async {
@@ -77,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               Text(
-                'Settings',
+                'Настройки',
                 style: TextStyle(
                     fontSize: kFontTitle, fontWeight: FontWeight.bold),
               ),
@@ -85,18 +85,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding:
                     EdgeInsets.symmetric(vertical: kDefaultPadding * 0.5),
                 child: Text(
-                    'You may need to re-authenticate to make changes in your account'),
+                    'Возможно вам потребуется перезайти в приложение, чтобы изменения вошли в силу'),
               )
             ],
           ),
-          SettingItem("Username", username, false),
-          SettingItem("Email", email, true),
+          SettingItem("Имя пользователя", username, false),
+          SettingItem("Почта", email, true),
           ElevatedButton(
               onPressed: signOut,
               child: SizedBox(
                   width:
                       MediaQuery.of(context).size.width - 2.4 * kDefaultPadding,
-                  child: Center(child: Text('Sign out'))))
+                  child: Center(child: Text('Выйти'))))
         ],
       ),
     ));
@@ -105,25 +105,25 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _displayTextInputDialog(
       BuildContext context, bool isEmail) async {
     String newValue = '';
-    String currentOption = isEmail ? 'email' : 'username';
+    String currentOption = isEmail ? 'почта' : 'имя';
     String error = '';
 
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Change $currentOption'),
+            title: Text('Поменять $currentOption'),
             content: TextField(
               decoration: InputDecoration(
-                hintText: 'Enter new $currentOption',
+                hintText: 'Введите $currentOption',
                 errorText: error == '' ? null : error,
               ),
               onChanged: (value) {
                 setState(() {
                   if (value.isEmpty) {
-                    error = 'The input must not be empty';
+                    error = 'Пустой ввод';
                   } else if (value.length > 30) {
-                    error = 'The length must be less than 30 symbols';
+                    error = 'Длина должна быть меньше 30 символов';
                   } else {
                     newValue = value;
                   }

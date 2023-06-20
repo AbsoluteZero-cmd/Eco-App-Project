@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
       onPressed:
       isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword,
-      child: Text(isLogin ? 'Login' : 'Register'),
+      child: Text(isLogin ? 'Войти' : 'Зарегестрироваться'),
     );
   }
 
@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
           isLogin = !isLogin;
         });
       },
-      child: Text(isLogin ? 'Register instead' : 'Login instead'),
+      child: Text(isLogin ? 'Зарегестрироваться' : 'Войти'),
     );
   }
 
@@ -104,8 +104,8 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _entryField('email', _controllerEmail, false),
-            _entryField('password', _controllerPassword, true),
+            _entryField('почта', _controllerEmail, false),
+            _entryField('пароль', _controllerPassword, true),
             _errorMessage(),
             _submitButton(),
             _loginOrRegisterButton(),

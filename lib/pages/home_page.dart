@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                                   width: width* 0.5 - kDefaultPadding,
                                   child: RichText(
                                     text: TextSpan(
-                                      text: 'Hello,\n',
+                                      text: 'Привет,\n',
                                       style: const TextStyle(
                                         fontSize: 20,
                                         fontFamily: 'Montserrat',
@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         const TextSpan(text: '!\n'),
                                         const TextSpan(
-                                            text: 'Your points:'
+                                            text: 'Ваши баллы:'
                                         )
                                       ],
                                     ),
@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                                         color: kSecondaryColor,
                                       ),
                                       Text(
-                                        '$dayStreak day streak',
+                                        '$dayStreak дней подряд',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontFamily: 'Montserrat',

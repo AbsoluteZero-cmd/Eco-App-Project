@@ -28,8 +28,8 @@ class _ArchivePageState extends State<ArchivePage> {
     super.initState();
 
     sortingOptions = [
-      DropdownMenuItem(value: '1',child: Text('By name'),),
-      DropdownMenuItem(value: '2',child: Text('By rarity'),),
+      DropdownMenuItem(value: '1',child: Text('По имени'),),
+      DropdownMenuItem(value: '2',child: Text('По редкости'),),
     ];
 
     _pageController = PageController(initialPage: 0, viewportFraction: 0.8);
@@ -90,7 +90,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                        'Rarity',
+                        'Редкость',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: kFontTitle * 0.8,
@@ -148,7 +148,7 @@ class _ArchivePageState extends State<ArchivePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
                   child: Text(
-                    'Plants archive',
+                    'Каталог растений',
                     style: TextStyle(
                         fontSize: kFontTitle,
                         fontWeight: FontWeight.bold
@@ -161,7 +161,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: DropdownButton<String>(
-                      hint: Text('Select sorting option'),
+                      hint: Text('Отсортировать растения'),
                       isExpanded: true,
                       items: sortingOptions,
                       value: _dropdownOption,
