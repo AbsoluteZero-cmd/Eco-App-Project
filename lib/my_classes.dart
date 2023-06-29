@@ -28,7 +28,7 @@ class Plant {
       "description": description,
       "imageURL": imageURL,
       "rarity": rarity,
-      "diseases": diseases,
+      // "diseases": diseases,
     };
   }
 
@@ -36,8 +36,7 @@ class Plant {
       : name = addressMap["name"],
         description = addressMap["description"],
         imageURL = addressMap["imageURL"],
-        rarity = addressMap["rarity"],
-        diseases = addressMap["diseases"];
+        rarity = addressMap["rarity"];
 }
 
 class Disease {

@@ -7,9 +7,7 @@ import 'package:eco_app_project/yandex_map/location_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 
 import '../auth/auth.dart';
@@ -26,21 +24,18 @@ class NewHistoryItemPage extends StatefulWidget {
 
 
 class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
-  late PickedFile? _file;
+  late XFile? _file;
   late File _image;
   List<dynamic>? _outputs;
   String type_of_plant = "";
   final currentDate = DateTime.now();
   int currentPoints = 0;
-  final ImagePicker _picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   String? _input;
   String _input_description = '';
   bool _isLoading = false;
   int mPoints = 0;
 
-
-  TextEditingController _controller1 = new TextEditingController(text: 'Initial value');
 
   @override
   void initState(){
@@ -53,76 +48,76 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       });
     }
 
-    loadModel();
-    classifyImage(_image);
+    // loadModel();
+    // classifyImage(_image);
   }
 
   //Load the Tflite model
-  loadModel() async {
-    var cur = await Tflite.loadModel(
-      model: 'assets/model.tflite',
-      labels: 'assets/labels.txt',
-    );
-  }
-
-  classifyImage(image) async {
-    var output = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 2,
-      threshold: 0.5,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
-
-
-    print('confidence: ${output![0]["confidence"]}');
-    setState(() {
-      _outputs = output;
-      type_of_plant =
-          _outputs![0]["label"].toString().substring(2).replaceAll('_', ' ');
-      var list = type_of_plant.split(' ');
-      var confidence = 100 * output[0]["confidence"];
-    // });
-
-      /*
-      if(confidence < 0.7){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Navigation(),
-            )
-        );
-        Fluttertoast.showToast(
-          msg: 'Not a plant! Confidence: ${(confidence.round())}%',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 1,
-        );
-      }
-      else if(list[list.length - 1] == 'healthy'){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Navigation(),
-            )
-        );
-        Fluttertoast.showToast(
-          msg: 'The plant is healthy already!',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 1,
-        );
-      }
-      */
-      print('my output: $type_of_plant');
-    });
-    currentPoints = await calculatePoints(type_of_plant);
-
-    setState(() {
-      mPoints = currentPoints;
-    });
-    print('my output: $type_of_plant; my points: $currentPoints');
-  }
+  // loadModel() async {
+  //   var cur = await Tflite.loadModel(
+  //     model: 'assets/model.tflite',
+  //     labels: 'assets/labels.txt',
+  //   );
+  // }
+  //
+  // classifyImage(image) async {
+  //   var output = await Tflite.runModelOnImage(
+  //     path: image.path,
+  //     numResults: 2,
+  //     threshold: 0.5,
+  //     imageMean: 127.5,
+  //     imageStd: 127.5,
+  //   );
+  //
+  //
+  //   print('confidence: ${output![0]["confidence"]}');
+  //   setState(() {
+  //     _outputs = output;
+  //     type_of_plant =
+  //         _outputs![0]["label"].toString().substring(2).replaceAll('_', ' ');
+  //     var list = type_of_plant.split(' ');
+  //     var confidence = 100 * output[0]["confidence"];
+  //   // });
+  //
+  //     /*
+  //     if(confidence < 0.7){
+  //       Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => Navigation(),
+  //           )
+  //       );
+  //       Fluttertoast.showToast(
+  //         msg: 'Not a plant! Confidence: ${(confidence.round())}%',
+  //         toastLength: Toast.LENGTH_LONG,
+  //         gravity: ToastGravity.TOP,
+  //         timeInSecForIosWeb: 1,
+  //       );
+  //     }
+  //     else if(list[list.length - 1] == 'healthy'){
+  //       Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => Navigation(),
+  //           )
+  //       );
+  //       Fluttertoast.showToast(
+  //         msg: 'The plant is healthy already!',
+  //         toastLength: Toast.LENGTH_LONG,
+  //         gravity: ToastGravity.TOP,
+  //         timeInSecForIosWeb: 1,
+  //       );
+  //     }
+  //     */
+  //     print('my output: $type_of_plant');
+  //   });
+  //   currentPoints = await calculatePoints(type_of_plant);
+  //
+  //   setState(() {
+  //     mPoints = currentPoints;
+  //   });
+  //   print('my output: $type_of_plant; my points: $currentPoints');
+  // }
 
   showPopupForm() {
     showDialog(
@@ -282,8 +277,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     final myUser = MyUser.fromMap(data);
 
 
+    currentPoints = 100;
     await ref.update({
-      "points": myUser.points + 100,
+      "points": myUser.points + currentPoints,
       "was_today": true,
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });

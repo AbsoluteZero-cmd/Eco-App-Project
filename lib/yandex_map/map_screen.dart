@@ -6,11 +6,8 @@ import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:eco_app_project/yandex_map/location_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-import '../auth/auth.dart';
 import '../my_classes.dart';
 
 class MapScreen extends StatefulWidget {

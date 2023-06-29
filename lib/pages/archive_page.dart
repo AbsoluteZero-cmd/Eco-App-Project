@@ -4,7 +4,6 @@ import 'package:eco_app_project/my_classes.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../auth/auth.dart';
 import '../constants.dart';
 
 class ArchivePage extends StatefulWidget {
@@ -38,7 +37,6 @@ class _ArchivePageState extends State<ArchivePage> {
   }
 
   Future fetchData() async {
-    String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("plants/");
 
     final List<Plant> list = [];
@@ -50,6 +48,7 @@ class _ArchivePageState extends State<ArchivePage> {
     }
 
     plants = list;
+    print(plants);
     return data;
   }
 

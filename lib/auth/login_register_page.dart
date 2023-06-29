@@ -2,7 +2,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './auth.dart';
-import '../navigation.dart';
 import 'user_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,8 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> signInWithEmailAndPassword() async {
     try {
       await Auth().signInWithEmailAndPassword(
-        email: _controllerEmail.text,
-        password: _controllerPassword.text,
+        email: _controllerEmail.text.toString().trim(),
+        password: _controllerPassword.text.toString().trim(),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -35,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> createUserWithEmailAndPassword() async {
     try {
       await Auth().createUserWithEmailAndPassword(
-        email: _controllerEmail.text,
-        password: _controllerPassword.text,
+        email: _controllerEmail.text.toString().trim(),
+        password: _controllerPassword.text.toString().trim(),
       );
 
       String? uid = Auth().currentUser?.uid.toString() ?? 'no-uid';
@@ -50,10 +49,6 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = e.message;
       });
     }
-  }
-
-  Widget _title() {
-    return const Text('Firebase Auth');
   }
 
   Widget _entryField(

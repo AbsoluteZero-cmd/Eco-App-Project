@@ -43,7 +43,7 @@ class _NavigationState extends State<Navigation> {
   }
 
   Future<void> onButtonPress() async {
-    var image = await ImagePicker().getImage(source: ImageSource.camera);
+    var image = await ImagePicker().pickImage(source: ImageSource.camera);
 
     if(image == null) return;
 

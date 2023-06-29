@@ -4,10 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
-import 'package:eco_app_project/yandex_map/app_lat_long.dart';
-import 'package:eco_app_project/yandex_map/map_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../my_classes.dart';
@@ -26,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   int pointsCount = 0;
   int dayStreak = 0;
 
-  late PageController _controller;
 
   Future fetchData() async {
     String? uid = Auth().currentUser?.uid.toString();
@@ -60,8 +56,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    _controller = PageController();
   }
 
   Widget historyCardBuilder(BuildContext context, HistoryItem historyItem, int index) {
@@ -296,7 +290,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> deleteHistoryItem(String id, int index) async {
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference reference = FirebaseDatabase.instance.ref('/history/${uid}/${id}');
-    print('my ref ${reference.path}');
     reference.remove();
 
     setState(() {
