@@ -27,19 +27,23 @@ class ArchiveDetailPage extends StatelessWidget {
               ),
             ),
             Expanded(
+              child: SingleChildScrollView(
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      plant.name,
-                      style: TextStyle(
-                        fontSize: kFontTitle,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 0.5 * kDefaultPadding),
+                      child: Text(
+                        plant.name,
+                        style: TextStyle(
+                          fontSize: kFontTitle,
+                        ),
                       ),
                     ),
                     Text(plant.description),
                   ],
-                )
+                ),
+              ),
             )
           ]
         ),
