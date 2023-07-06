@@ -255,12 +255,10 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     if(type_of_plant.split(' ').length > 2){
       name += '_${type_of_plant.split(' ')[1]}';
     }
-    print("plants/$name");
     DatabaseReference ref = FirebaseDatabase.instance.ref("plants/$name");
     var data = await ref.get();
     var data2 = Map<String, dynamic>.from(data.value as Map);
     final plant = Plant.fromMap(data2);
-    print(data2);
     return plant.rarity * 10;
   }
 
@@ -297,7 +295,6 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints, description: _input_description, id: id);
 
-    print(historyItem.toMap());
 
     await itemRef.set(historyItem.toMap());
 

@@ -48,7 +48,6 @@ class _ArchivePageState extends State<ArchivePage> {
     }
 
     plants = list;
-    print(plants);
     return data;
   }
 
