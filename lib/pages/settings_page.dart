@@ -1,6 +1,7 @@
 import 'package:eco_app_project/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../auth/auth.dart';
 import '../auth/login_register_page.dart';
 
@@ -27,8 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> signOut() async {
     await Auth().signOut();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
-    Navigator.pop(context);
+    // SystemNavigator.pop();
   }
 
   Widget SettingItem(String title, String val, bool isEmail) {
@@ -67,37 +67,36 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          margin: EdgeInsets.all(kDefaultPadding * 1.2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Настройки',
-                    style: TextStyle(
-                        fontSize: kFontTitle, fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding:
-                    EdgeInsets.symmetric(vertical: kDefaultPadding * 0.5),
-                    child: Text(
-                        'Возможно вам потребуется перезайти в приложение, чтобы изменения вошли в силу'),
-                  )
-                ],
+      margin: EdgeInsets.all(kDefaultPadding * 1.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'Настройки',
+                style: TextStyle(
+                    fontSize: kFontTitle, fontWeight: FontWeight.bold),
               ),
-              SettingItem("Имя пользователя", username, false),
-              SettingItem("Почта", email, true),
-              ElevatedButton(
-                  onPressed: signOut,
-                  child: SizedBox(
-                      width:
-                      MediaQuery.of(context).size.width - 2.4 * kDefaultPadding,
-                      child: Center(child: Text('Выйти'))))
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: kDefaultPadding * 0.5),
+                child: Text(
+                    'Возможно вам потребуется перезайти в приложение, чтобы изменения вошли в силу'),
+              )
             ],
           ),
-        ));
+          SettingItem("Имя пользователя", username, false),
+          SettingItem("Почта", email, true),
+          ElevatedButton(
+              onPressed: signOut,
+              child: SizedBox(
+                  width:
+                      MediaQuery.of(context).size.width - 2.4 * kDefaultPadding,
+                  child: Center(child: Text('Выйти'))))
+        ],
+      ),
+    ));
   }
 
   Future<void> _displayTextInputDialog(
@@ -131,7 +130,8 @@ class _SettingsPageState extends State<SettingsPage> {
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
-                    foregroundColor: kPrimaryColor, backgroundColor: Colors.white),
+                    foregroundColor: kPrimaryColor,
+                    backgroundColor: Colors.white),
                 child: Text('Cancel'),
                 onPressed: () {
                   setState(() {
@@ -141,7 +141,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                    foregroundColor: kPrimaryColor, backgroundColor: Colors.white),
+                    foregroundColor: kPrimaryColor,
+                    backgroundColor: Colors.white),
                 child: Text('Ok'),
                 onPressed: () {
                   setState(() {
