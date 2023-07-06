@@ -55,35 +55,35 @@ class _MapScreenState extends State<MapScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(historyItem.title, style: TextStyle(fontSize: kFontTitle * 0.8)),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: CachedNetworkImage(
-                                imageUrl: historyItem.imageUri,
-                                fit: BoxFit.cover,
-                                alignment: Alignment.center,
-                                repeat: ImageRepeat.noRepeat,
-                                width: width * 0.8,
-                                height: height * 0.2,
-                                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                              ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(historyItem.title, style: TextStyle(fontSize: kFontTitle * 0.8)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: CachedNetworkImage(
+                              imageUrl: historyItem.imageUri,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                              repeat: ImageRepeat.noRepeat,
+                              width: width * 0.8,
+                              height: height * 0.2,
+                              placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                             ),
                           ),
-                          Text('Описание болезни: ${historyItem.description}'),
-                          Text(
-                            historyItem.date,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          )
+                        ),
+                        Text('Описание болезни: ${historyItem.description}'),
+                        Text(
+                          historyItem.date,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        )
                       ],
                     )
                   ],

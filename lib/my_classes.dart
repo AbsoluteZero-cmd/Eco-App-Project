@@ -74,13 +74,13 @@ class HistoryItem{
   String id;
 
   HistoryItem({
-      required this.title,
-      required this.imageUri,
-      required this.latLong,
-      required this.date,
-      required this.points,
-      required this.description,
-      required this.id,
+    required this.title,
+    required this.imageUri,
+    required this.latLong,
+    required this.date,
+    required this.points,
+    required this.description,
+    required this.id,
   });
 
   static getDate(DateTime date){

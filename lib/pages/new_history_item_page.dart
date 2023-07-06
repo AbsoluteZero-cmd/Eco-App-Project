@@ -190,8 +190,8 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 1.5 * kDefaultPadding),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Форма',
@@ -211,7 +211,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
                         ),
                       ),
                       _isLoading ? LinearProgressIndicator()
-                      : TextField(
+                          : TextField(
                         maxLines: 1,
                         maxLength: 30,
                         decoration: InputDecoration(
@@ -223,25 +223,25 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
                           _input = text;
                         },
                       ),
-                    TextField(
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        labelText: 'Описание болезни',
-                        filled: true,
-                        fillColor: Colors.grey[200],
+                      TextField(
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          labelText: 'Описание болезни',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                        ),
+                        onChanged: (text) {
+                          setState(() {
+                            _input_description = text;
+                          });
+                        },
                       ),
-                      onChanged: (text) {
-                        setState(() {
-                          _input_description = text;
-                        });
-                      },
-                    ),
                       ElevatedButton(
                         onPressed: uploadData,
                         child: Text('Загрузить'),
                       )
                     ],
-                )
+                  )
               ),
             ),
           ),
@@ -266,7 +266,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     setState(() {
       _isLoading = true;
     });
-    
+
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/$uid");
 

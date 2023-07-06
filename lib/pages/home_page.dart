@@ -67,68 +67,68 @@ class _HomePageState extends State<HomePage> {
       height: height * 0.5,
       child: Center(
         child: Card(
-            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.2),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: CachedNetworkImage(
-                            imageUrl: historyItem.imageUri,
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
-                            repeat: ImageRepeat.noRepeat,
-                            width: width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.21,
-                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                          ),
+          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 0.2, horizontal: kDefaultPadding * 0.2),
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: CachedNetworkImage(
+                          imageUrl: historyItem.imageUri,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                          repeat: ImageRepeat.noRepeat,
+                          width: width * 0.8,
+                          height: MediaQuery.of(context).size.height * 0.21,
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                         ),
-                        DefaultTextStyle(
-                          style: const TextStyle(
+                      ),
+                      DefaultTextStyle(
+                        style: const TextStyle(
                             fontSize: 20,
                             color: Colors.grey,
                             fontFamily: 'Montserrat'
-                          ),
-                          child: Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: kDefaultPadding, horizontal: 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    historyItem.title.toUpperCase(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
-                                    maxLines: 2,
-                                  ),
-                                  Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
-                                  Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
-                                ],
-                              ),
+                        ),
+                        child: Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding, horizontal: 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  historyItem.title.toUpperCase(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: kFontTitle, fontWeight: FontWeight.bold),
+                                  maxLines: 2,
+                                ),
+                                Text(historyItem.date, overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                Text('Points: ${historyItem.points}', overflow: TextOverflow.ellipsis),
+                              ],
                             ),
                           ),
-                        )
-                      ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    right: 0,
+                    child: FloatingActionButton(
+                      onPressed: () async {
+                        await deleteHistoryItem(historyItem.id, index);
+                      },
+                      child: const Icon(Icons.delete),
                     ),
-                    Positioned(
-                      bottom: 20,
-                      right: 0,
-                      child: FloatingActionButton(
-                        onPressed: () async {
-                          await deleteHistoryItem(historyItem.id, index);
-                        },
-                        child: const Icon(Icons.delete),
-                      ),
-                    )
-                  ],
-                )
-            ),
+                  )
+                ],
+              )
+          ),
         ),
       ),
     );
@@ -272,8 +272,8 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ) : Container(
-                      padding: const EdgeInsets.all(1.5 * kDefaultPadding),
-                      child: Center(child: Text('Пока что тут пусто'),)
+                        padding: const EdgeInsets.all(1.5 * kDefaultPadding),
+                        child: Center(child: Text('Пока что тут пусто'),)
                     ),
                   )
                 ],

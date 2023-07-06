@@ -1,4 +1,6 @@
 
+import '../my_classes.dart';
+
 class MyUser {
   final String uid;
   final String name;
@@ -14,7 +16,8 @@ class MyUser {
     this.was_yesterday = false,
     this.was_today = false,
     this.days_streak = 1,
-    this.history_items = 0});
+    this.history_items = 0,
+  });
 
   Map<String, dynamic> toMap() {
     return {

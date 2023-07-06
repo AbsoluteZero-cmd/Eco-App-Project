@@ -1,4 +1,3 @@
-
 class AppLatLong {
   final double lat;
   final double long;

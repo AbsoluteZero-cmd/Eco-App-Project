@@ -14,34 +14,38 @@ class ArchiveDetailPage extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 2 * kDefaultPadding),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Hero(
-              tag: 'plant${plant.name}',
-              child: CachedNetworkImage(
-                fit: BoxFit.fitWidth,
-                height: 500,
-                imageUrl: plant.imageURL,
-                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Hero(
+                tag: 'plant${plant.name}',
+                child: CachedNetworkImage(
+                  fit: BoxFit.fitWidth,
+                  height: 500,
+                  imageUrl: plant.imageURL,
+                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                ),
               ),
-            ),
-            Expanded(
-                child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      plant.name,
-                      style: TextStyle(
-                        fontSize: kFontTitle,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 0.5 * kDefaultPadding),
+                        child: Text(
+                          plant.name,
+                          style: TextStyle(
+                            fontSize: kFontTitle,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(plant.description),
-                  ],
-                )
-            )
-          ]
+                      Text(plant.description),
+                    ],
+                  ),
+                ),
+              )
+            ]
         ),
       ),
     );
@@ -53,21 +57,21 @@ class ArchiveDetailPage extends StatelessWidget {
         pageSnapping: true,
         itemBuilder: (context, index){
           return Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(plant.diseases[index].name.toUpperCase()),
-                    Spacer(),
-                    Text(plant.diseases[index].infection_level.toString()),
-                    Icon(Icons.star, color: Colors.red,)
-                  ],
-                ),
-                Text(plant.diseases[index].description)
-              ],
-            )
+              margin: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(plant.diseases[index].name.toUpperCase()),
+                      Spacer(),
+                      Text(plant.diseases[index].infection_level.toString()),
+                      Icon(Icons.star, color: Colors.red,)
+                    ],
+                  ),
+                  Text(plant.diseases[index].description)
+                ],
+              )
           );
         });
   }

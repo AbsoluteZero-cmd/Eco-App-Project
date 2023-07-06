@@ -60,8 +60,8 @@ class _ArchivePageState extends State<ArchivePage> {
           margin: EdgeInsets.symmetric(horizontal: kDefaultPadding * 0.3),
           padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-            color: kPrimaryColor,
-            borderRadius: BorderRadius.circular(kBorderRadius)
+              color: kPrimaryColor,
+              borderRadius: BorderRadius.circular(kBorderRadius)
           ),
 
           height: double.infinity,
@@ -90,8 +90,8 @@ class _ArchivePageState extends State<ArchivePage> {
                     Text(
                         'Редкость',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: kFontTitle * 0.8,
+                          color: Colors.white,
+                          fontSize: kFontTitle * 0.8,
                         )
                     ),
                     Row(
@@ -107,7 +107,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => ArchiveDetailPage(plant: plants[index])
+                          pageBuilder: (_, __, ___) => ArchiveDetailPage(plant: plants[index])
                       )
                   );
                 },

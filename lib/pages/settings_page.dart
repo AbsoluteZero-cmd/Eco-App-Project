@@ -34,32 +34,30 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget SettingItem(String title, String val, bool isEmail) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(kDefaultPadding * 0.5),
-        child: Flexible(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "$title:",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Flexible(
-                child: TextButton.icon(
-                  onPressed: () {
-                    _displayTextInputDialog(context, isEmail);
-                  },
-                  icon: Flexible(
-                    child: Text(
-                      val,
-                      style: TextStyle(color: Colors.black),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "$title:",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            Flexible(
+              child: TextButton.icon(
+                onPressed: () {
+                  _displayTextInputDialog(context, isEmail);
+                },
+                icon: Flexible(
+                  child: Text(
+                    val,
+                    style: TextStyle(color: Colors.black),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  label: Icon(Icons.edit),
                 ),
+                label: Icon(Icons.edit),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -69,37 +67,37 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      margin: EdgeInsets.all(kDefaultPadding * 1.2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Настройки',
-                style: TextStyle(
-                    fontSize: kFontTitle, fontWeight: FontWeight.bold),
-              ),
-              Padding(
-                padding:
+          margin: EdgeInsets.all(kDefaultPadding * 1.2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Настройки',
+                    style: TextStyle(
+                        fontSize: kFontTitle, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding:
                     EdgeInsets.symmetric(vertical: kDefaultPadding * 0.5),
-                child: Text(
-                    'Возможно вам потребуется перезайти в приложение, чтобы изменения вошли в силу'),
-              )
+                    child: Text(
+                        'Возможно вам потребуется перезайти в приложение, чтобы изменения вошли в силу'),
+                  )
+                ],
+              ),
+              SettingItem("Имя пользователя", username, false),
+              SettingItem("Почта", email, true),
+              ElevatedButton(
+                  onPressed: signOut,
+                  child: SizedBox(
+                      width:
+                      MediaQuery.of(context).size.width - 2.4 * kDefaultPadding,
+                      child: Center(child: Text('Выйти'))))
             ],
           ),
-          SettingItem("Имя пользователя", username, false),
-          SettingItem("Почта", email, true),
-          ElevatedButton(
-              onPressed: signOut,
-              child: SizedBox(
-                  width:
-                      MediaQuery.of(context).size.width - 2.4 * kDefaultPadding,
-                  child: Center(child: Text('Выйти'))))
-        ],
-      ),
-    ));
+        ));
   }
 
   Future<void> _displayTextInputDialog(
