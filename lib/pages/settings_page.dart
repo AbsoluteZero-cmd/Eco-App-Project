@@ -34,30 +34,32 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget SettingItem(String title, String val, bool isEmail) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "$title:",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            Flexible(
-              child: TextButton.icon(
-                onPressed: () {
-                  _displayTextInputDialog(context, isEmail);
-                },
-                icon: Flexible(
-                  child: Text(
-                    val,
-                    style: TextStyle(color: Colors.black),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                label: Icon(Icons.edit),
+        padding: const EdgeInsets.all(kDefaultPadding * 0.5),
+        child: Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "$title:",
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
-            ),
-          ],
+              Flexible(
+                child: TextButton.icon(
+                  onPressed: () {
+                    _displayTextInputDialog(context, isEmail);
+                  },
+                  icon: Flexible(
+                    child: Text(
+                      val,
+                      style: TextStyle(color: Colors.black),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  label: Icon(Icons.edit),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
