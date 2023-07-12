@@ -26,21 +26,22 @@ class NewHistoryItemPage extends StatefulWidget {
 class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   late XFile? _file;
   late File _image;
-  List<dynamic>? _outputs;
   String type_of_plant = "";
   final currentDate = DateTime.now();
   int currentPoints = 0;
-  final _formKey = GlobalKey<FormState>();
   String? _input;
   String _input_description = '';
   bool _isLoading = false;
   int mPoints = 0;
+
+  final List<XFile>? imagefiles = [];
 
 
   @override
   void initState(){
     super.initState();
     _file = widget.image;
+    imagefiles!.add(_file!);
 
     if (_file != null) {
       setState(() {
@@ -119,71 +120,13 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   //   print('my output: $type_of_plant; my points: $currentPoints');
   // }
 
-  showPopupForm() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Stack(
-              children: <Widget>[
-                Positioned(
-                  right: -40.0,
-                  top: -40.0,
-                  child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CircleAvatar(
-                      child: Icon(Icons.close),
-                      backgroundColor: Colors.red,
-                    ),
-                  ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              hintText: 'Enter plant type'
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              hintText: 'Enter plant name'
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          child: Text("Upload"),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-
-                            }
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.photo_camera),
+        onPressed: addNewImage,
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -202,12 +145,8 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.file(
-                            _image,
-                            fit: BoxFit.cover,
-                          ),
+                        child: Flexible(
+                            child: getImagesGrid()
                         ),
                       ),
                       _isLoading ? LinearProgressIndicator()
@@ -299,5 +238,42 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     await itemRef.set(historyItem.toMap());
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
+  }
+
+  Widget getImagesGrid(){
+    return SizedBox(
+      height: 220,
+      width: double.infinity,
+      child: SingleChildScrollView(
+        child: imagefiles != null ? Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          runAlignment: WrapAlignment.spaceBetween,
+          children: imagefiles!.map((image){
+            return Card(
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: AspectRatio(
+                    aspectRatio: 2 / 3,
+                    child: Image.file(File(image.path))),
+              ),
+            );
+          }).toList(),
+        ):Container(),
+      ),
+    );
+  }
+
+  Future<void> addNewImage() async {
+    XFile? newImage = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if(newImage == null) return;
+
+    setState(() {
+      imagefiles!.add(newImage);
+    });
   }
 }

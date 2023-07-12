@@ -39,7 +39,6 @@ class _NavigationState extends State<Navigation> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref = FirebaseDatabase.instance.ref("users/123");
   }
 
   Future<void> onButtonPress() async {
