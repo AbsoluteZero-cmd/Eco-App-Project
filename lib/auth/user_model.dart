@@ -1,6 +1,3 @@
-
-import '../my_classes.dart';
-
 class MyUser {
   final String uid;
   final String name;

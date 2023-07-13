@@ -8,7 +8,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
 
 import '../auth/auth.dart';
 import '../navigation.dart';
@@ -126,65 +125,57 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.photo_camera),
         onPressed: addNewImage,
+        heroTag: "btn2",
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 1.5 * kDefaultPadding),
-              child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Форма',
-                        style: TextStyle(
-                          fontSize: kFontTitle,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
-                        child: Flexible(
-                            child: getImagesGrid()
-                        ),
-                      ),
-                      _isLoading ? LinearProgressIndicator()
-                          : TextField(
-                        maxLines: 1,
-                        maxLength: 30,
-                        decoration: InputDecoration(
-                          labelText: 'Вид растения',
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                        ),
-                        onChanged: (text) {
-                          _input = text;
-                        },
-                      ),
-                      TextField(
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                          labelText: 'Описание болезни',
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                        ),
-                        onChanged: (text) {
-                          setState(() {
-                            _input_description = text;
-                          });
-                        },
-                      ),
-                      ElevatedButton(
-                        onPressed: uploadData,
-                        child: Text('Загрузить'),
-                      )
-                    ],
-                  )
-              ),
-            ),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 1.5 * kDefaultPadding),
+        child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Форма',
+                  style: TextStyle(
+                    fontSize: kFontTitle,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
+                  child: getImagesGrid()
+                ),
+                TextField(
+                  maxLines: 1,
+                  maxLength: 30,
+                  decoration: InputDecoration(
+                    labelText: 'Вид растения',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  onChanged: (text) {
+                    _input = text;
+                  },
+                ),
+                TextField(
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    labelText: 'Описание болезни',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  onChanged: (text) {
+                    setState(() {
+                      _input_description = text;
+                    });
+                  },
+                ),
+                _isLoading ? LinearProgressIndicator() : ElevatedButton(
+                  onPressed: uploadData,
+                  child: Text('Загрузить'),
+                )
+              ],
+            )
+        ),
       ),
     );
   }
@@ -222,12 +213,10 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     Reference imgRef = FirebaseStorage.instance.ref("history/$uid/${id}");
     List<String> imageUris = [];
-    print('my images ${imagefiles}');
     for(int i = 0; i < imagefiles!.length; i++){
       Reference currentRef = imgRef.child(imagefiles![i].name);
       await currentRef.putFile(File(imagefiles![i].path));
       String imageUri = await currentRef.getDownloadURL();
-      print('image no ${i} added');
       imageUris.add(imageUri);
     }
 

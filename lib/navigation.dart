@@ -56,6 +56,7 @@ class _NavigationState extends State<Navigation> {
       floatingActionButton: FloatingActionButton(
         onPressed: onButtonPress,
         child: Icon(Icons.add),
+        heroTag: "btn1",
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(

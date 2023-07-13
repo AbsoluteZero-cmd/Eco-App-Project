@@ -5,7 +5,6 @@ import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../my_classes.dart';
@@ -98,32 +97,28 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     // mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: historyItem.imageUris.length > 0 ? SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: double.infinity,
-                          child: SingleChildScrollView(
-                            child: Wrap(
-                              alignment: WrapAlignment.spaceBetween,
-                              runAlignment: WrapAlignment.spaceBetween,
-                              children: historyItem.imageUris.map((imageUri){
-                                return Card(
-                                  child: Container(
-                                    padding: EdgeInsets.all(3.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: AspectRatio(
-                                        aspectRatio: 5 / 7,
-                                        child: CachedNetworkImage(imageUrl: imageUri, placeholder: (context, url) => SizedBox(height: 50, width: 50, child: Center(child: CircularProgressIndicator())),),
-                                  ),
-                                ));
-                              }).toList(),
-                            )
-                          ),
-                        ) : CircularProgressIndicator()
-                      ),
+                      historyItem.imageUris.length > 0 ? SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            runAlignment: WrapAlignment.spaceBetween,
+                            children: historyItem.imageUris.map((imageUri){
+                              return Container(
+                                padding: EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                ),
+                                child: AspectRatio(
+                                    aspectRatio: 5 / 7,
+                                    child: CachedNetworkImage(imageUrl: imageUri, placeholder: (context, url) => SizedBox(height: 50, width: 50, child: Center(child: CircularProgressIndicator())),),
+                              ),
+                              );
+                            }).toList(),
+                          )
+                        ),
+                      ) : CircularProgressIndicator(),
                       DefaultTextStyle(
                         style: const TextStyle(
                             fontSize: 20,
@@ -155,11 +150,11 @@ class _HomePageState extends State<HomePage> {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: FloatingActionButton(
+                    child: IconButton(
                       onPressed: () async {
                         await deleteHistoryItem(historyItem.id, index);
                       },
-                      child: const Icon(Icons.delete),
+                      icon: Icon(Icons.delete),
                     ),
                   )
                 ],
