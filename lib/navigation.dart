@@ -39,7 +39,6 @@ class _NavigationState extends State<Navigation> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref = FirebaseDatabase.instance.ref("users/123");
   }
 
   Future<void> onButtonPress() async {
@@ -57,6 +56,7 @@ class _NavigationState extends State<Navigation> {
       floatingActionButton: FloatingActionButton(
         onPressed: onButtonPress,
         child: Icon(Icons.add),
+        heroTag: "btn1",
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(

@@ -8,6 +8,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
+import '../auth/auth.dart';
 import '../my_classes.dart';
 
 class MapScreen extends StatefulWidget {
@@ -45,49 +46,53 @@ class _MapScreenState extends State<MapScreen> {
             borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10)),
           ),
           builder: (BuildContext context) {
-            double width = MediaQuery.of(context).size.width;
-            double height = MediaQuery.of(context).size.height;
-
-            return SizedBox(
-              height: 350,
-              child: Padding(
-                padding: const EdgeInsets.all(kDefaultPadding),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(historyItem.title, style: TextStyle(fontSize: kFontTitle * 0.8)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: CachedNetworkImage(
-                              imageUrl: historyItem.imageUri,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.center,
-                              repeat: ImageRepeat.noRepeat,
-                              width: width * 0.8,
-                              height: height * 0.2,
-                              placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+            return Padding(
+              padding: const EdgeInsets.all(kDefaultPadding),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(historyItem.title, style: TextStyle(fontSize: kFontTitle * 0.8)),
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: historyItem.imageUris.length > 0 ? SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: historyItem.imageUris.map((imageUri){
+                                    return Container(
+                                      padding: EdgeInsetsDirectional.symmetric(horizontal: 10.0),
+                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      child: AspectRatio(
+                                        aspectRatio: 5 / 7,
+                                        child: CachedNetworkImage(imageUrl: imageUri, placeholder: (context, url) => SizedBox(height: 50, width: 50, child: Center(child: CircularProgressIndicator())),),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
                             ),
-                          ),
+                          ) : CircularProgressIndicator()
+                      ),
+                      Text('Описание болезни: ${historyItem.description}'),
+                      Text(
+                        historyItem.date,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
                         ),
-                        Text('Описание болезни: ${historyItem.description}'),
-                        Text(
-                          historyItem.date,
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                      )
+                    ],
+                  )
+                ],
               ),
             );
           },
@@ -149,14 +154,38 @@ class _MapScreenState extends State<MapScreen> {
     //
 
 
-    DatabaseReference reference = FirebaseDatabase.instance.ref("history");
-    var result = await reference.get();
-    for(var i in result.children){
-      for(var element in i.children){
-        var data2 = Map<String, dynamic>.from(element.value as Map);
-        final historyItem = HistoryItem.fromMap(data2);
-        objects.add(getPlacemarkMapObject(historyItem));
+    // DatabaseReference reference = FirebaseDatabase.instance.ref("history");
+    // var result = await reference.get();
+    // for(var i in result.children){
+    //   for(var element in i.children){
+    //     var data2 = Map<String, dynamic>.from(element.value as Map);
+    //     final historyItem = HistoryItem.fromMap(data2);
+    //     objects.add(getPlacemarkMapObject(historyItem));
+    //   }
+    // }
+
+    String? uid = Auth().currentUser?.uid.toString();
+    DatabaseReference refHistory = FirebaseDatabase.instance.ref("history/$uid");
+    var result = await refHistory.get();
+
+
+    for (var element in result.children) {
+      var elementData = Map<String, dynamic>.from(element.value as Map);
+      final historyItem = HistoryItem.fromMap(elementData);
+
+
+      var uris = element
+          .child("imageUris")
+          .value;
+      List<String> strings = [];
+      if (uris != null) {
+        var urisData = uris as List<Object?>;
+        for (var i in urisData) {
+          strings.add(i.toString());
+        }
       }
+      historyItem.imageUris.addAll(strings);
+      objects.add(getPlacemarkMapObject(historyItem));
     }
 
 
