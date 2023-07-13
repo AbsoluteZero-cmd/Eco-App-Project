@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     child: AspectRatio(
                                         aspectRatio: 5 / 7,
-                                        child: CachedNetworkImage(imageUrl: imageUri, placeholder: (context, url) => SizedBox(height: 100, width: 100, child: CircularProgressIndicator()),),
+                                        child: CachedNetworkImage(imageUrl: imageUri, placeholder: (context, url) => SizedBox(height: 50, width: 50, child: Center(child: CircularProgressIndicator())),),
                                   ),
                                 ));
                               }).toList(),
