@@ -208,12 +208,9 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
 
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/$uid");
-
     var result = await ref.get();
     final data = Map<String, dynamic>.from(result.value as Map);
     final myUser = MyUser.fromMap(data);
-
-
     currentPoints = 100;
     await ref.update({
       "points": myUser.points + currentPoints,
@@ -221,20 +218,23 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
       "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
 
+
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-
-    DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${id}");
-
-
     Reference imgRef = FirebaseStorage.instance.ref("history/$uid/${id}");
-    await imgRef.putFile(_image);
-    String imageUri = await imgRef.getDownloadURL();
+    List<String> imageUris = [];
+    print('my images ${imagefiles}');
+    for(int i = 0; i < imagefiles!.length; i++){
+      Reference currentRef = imgRef.child(imagefiles![i].name);
+      await currentRef.putFile(File(imagefiles![i].path));
+      String imageUri = await currentRef.getDownloadURL();
+      print('image no ${i} added');
+      imageUris.add(imageUri);
+    }
+
 
     final currentLocation = await LocationService().getCurrentLocation();
-
-    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUri: imageUri, latLong: currentLocation.toString(), points: currentPoints, description: _input_description, id: id);
-
-
+    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUris: imageUris, latLong: currentLocation.toString(), points: currentPoints, description: _input_description, id: id);
+    DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${id}");
     await itemRef.set(historyItem.toMap());
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
@@ -251,13 +251,13 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
           children: imagefiles!.map((image){
             return Card(
               child: Container(
-                padding: EdgeInsets.all(8.0),
-                height: 200,
+                width: MediaQuery.of(context).size.width * 0.4,
+                padding: EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: AspectRatio(
-                    aspectRatio: 2 / 3,
+                    aspectRatio: 7 / 9,
                     child: Image.file(File(image.path))),
               ),
             );

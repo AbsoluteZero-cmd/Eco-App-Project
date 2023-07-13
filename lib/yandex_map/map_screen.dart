@@ -66,7 +66,7 @@ class _MapScreenState extends State<MapScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5),
                             child: CachedNetworkImage(
-                              imageUrl: historyItem.imageUri,
+                              imageUrl: historyItem.imageUris[0],
                               fit: BoxFit.cover,
                               alignment: Alignment.center,
                               repeat: ImageRepeat.noRepeat,

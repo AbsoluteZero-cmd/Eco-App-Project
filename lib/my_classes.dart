@@ -66,7 +66,7 @@ class Disease {
 
 class HistoryItem{
   String title;
-  String imageUri;
+  List<String> imageUris;
   int points;
   String date;
   String latLong;
@@ -75,7 +75,7 @@ class HistoryItem{
 
   HistoryItem({
     required this.title,
-    required this.imageUri,
+    required this.imageUris,
     required this.latLong,
     required this.date,
     required this.points,
@@ -94,7 +94,7 @@ class HistoryItem{
   Map<String, dynamic> toMap() {
     return {
       "title": title,
-      "imageUri": imageUri,
+      "imageUris": imageUris,
       "points": points,
       "date": date,
       "latLong": latLong,
@@ -105,7 +105,7 @@ class HistoryItem{
 
   HistoryItem.fromMap(Map<String, dynamic> addressMap)
       : title = addressMap["title"],
-        imageUri = addressMap["imageUri"],
+        imageUris = [],
         points = addressMap["points"],
         date = addressMap["date"],
         latLong = addressMap["latLong"],

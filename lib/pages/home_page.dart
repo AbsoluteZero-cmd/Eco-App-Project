@@ -5,6 +5,7 @@ import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../my_classes.dart';
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   int dayStreak = 0;
 
 
-  Future fetchData() async {
+  Future<void> fetchUserData() async {
     String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/$uid");
 
@@ -37,20 +38,41 @@ class _HomePageState extends State<HomePage> {
 
     pointsCount = myUser!.points;
     dayStreak = myUser!.days_streak;
+  }
 
+  Future<void> fetchHistoryItemsData() async {
+    String? uid = Auth().currentUser?.uid.toString();
     DatabaseReference refHistory = FirebaseDatabase.instance.ref("history/$uid");
-    result = await refHistory.get();
+    var result = await refHistory.get();
 
     List<HistoryItem> list = [];
 
     for (var element in result.children) {
-      var data2 = Map<String, dynamic>.from(element.value as Map);
-      final historyItem = HistoryItem.fromMap(data2);
+      var elementData = Map<String, dynamic>.from(element.value as Map);
+      final historyItem = HistoryItem.fromMap(elementData);
+
+
+      var uris = element.child("imageUris").value;
+      List<String> strings = [];
+      if(uris != null) {
+        var urisData = uris as List<Object?>;
+        for(var i in urisData){
+          strings.add(i.toString());
+        }
+      }
+      historyItem.imageUris.addAll(strings);
       list.add(historyItem);
     }
 
     historyItems = list;
-    return result;
+    print('my history: ${historyItems}');
+  }
+
+  Future<bool> fetchData() async {
+    await fetchUserData();
+    await fetchHistoryItemsData();
+
+    return true;
   }
 
   @override
@@ -78,15 +100,29 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: CachedNetworkImage(
-                          imageUrl: historyItem.imageUri,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center,
-                          repeat: ImageRepeat.noRepeat,
-                          width: width * 0.8,
-                          height: MediaQuery.of(context).size.height * 0.21,
-                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                        ),
+                        child: historyItem.imageUris.length > 0 ? SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: double.infinity,
+                          child: SingleChildScrollView(
+                            child: Wrap(
+                              alignment: WrapAlignment.spaceBetween,
+                              runAlignment: WrapAlignment.spaceBetween,
+                              children: historyItem.imageUris.map((imageUri){
+                                return Card(
+                                  child: Container(
+                                    padding: EdgeInsets.all(3.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: AspectRatio(
+                                        aspectRatio: 5 / 7,
+                                        child: CachedNetworkImage(imageUrl: imageUri, placeholder: (context, url) => SizedBox(height: 100, width: 100, child: CircularProgressIndicator()),),
+                                  ),
+                                ));
+                              }).toList(),
+                            )
+                          ),
+                        ) : CircularProgressIndicator()
                       ),
                       DefaultTextStyle(
                         style: const TextStyle(
@@ -117,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: 0,
                     right: 0,
                     child: FloatingActionButton(
                       onPressed: () async {
