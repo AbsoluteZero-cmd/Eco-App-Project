@@ -1,4 +1,3 @@
-
 import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:intl/intl.dart';
 
@@ -7,20 +6,13 @@ class Plant {
   late String description;
   late String imageURL;
   late int rarity;
-  List<Disease> diseases = [];
 
-
-  Plant(String name, String description, int rarity, String imageURL){
+  Plant(String name, String description, int rarity, String imageURL) {
     this.name = name;
     this.description = description;
     this.rarity = rarity;
     this.imageURL = imageURL;
   }
-
-  void addDisease(Disease disease){
-    diseases.add(disease);
-  }
-
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,7 +20,6 @@ class Plant {
       "description": description,
       "imageURL": imageURL,
       "rarity": rarity,
-      // "diseases": diseases,
     };
   }
 
@@ -44,7 +35,7 @@ class Disease {
   late int infection_level;
   late String description;
 
-  Disease(String name, int infection_level, String description){
+  Disease(String name, int infection_level, String description) {
     this.name = name;
     this.infection_level = infection_level;
     this.description = description;
@@ -64,7 +55,7 @@ class Disease {
         infection_level = addressMap["infection_level"];
 }
 
-class HistoryItem{
+class HistoryItem {
   String title;
   List<String> imageUris;
   int points;
@@ -72,6 +63,16 @@ class HistoryItem{
   String latLong;
   String description;
   String id;
+
+  late int age;
+  late int height;
+  late String status;
+
+  static List<String> statusList = [
+    "Больное",
+    "Аварийное",
+    "Здоровое",
+  ];
 
   HistoryItem({
     required this.title,
@@ -81,14 +82,19 @@ class HistoryItem{
     required this.points,
     required this.description,
     required this.id,
+    required this.age,
+    required this.height,
+    required this.status,
   });
 
-  static getDate(DateTime date){
+  static getDate(DateTime date) {
     return DateFormat('EEEE, MMM d, yyyy').format(date);
   }
 
   AppLatLong getLatLong() {
-    return AppLatLong(lat: double.parse(latLong.substring(0, latLong.indexOf(' '))), long: double.parse(latLong.substring(latLong.indexOf(' ') + 1)));
+    return AppLatLong(
+        lat: double.parse(latLong.substring(0, latLong.indexOf(' '))),
+        long: double.parse(latLong.substring(latLong.indexOf(' ') + 1)));
   }
 
   Map<String, dynamic> toMap() {
@@ -100,6 +106,9 @@ class HistoryItem{
       "latLong": latLong,
       "description": description,
       "id": id,
+      "age": age,
+      "height": height,
+      "status": status,
     };
   }
 
@@ -110,5 +119,8 @@ class HistoryItem{
         date = addressMap["date"],
         latLong = addressMap["latLong"],
         description = addressMap["description"],
+        age = addressMap["age"],
+        height = addressMap["height"],
+        status = addressMap["status"],
         id = addressMap["id"];
 }

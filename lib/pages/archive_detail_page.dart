@@ -12,7 +12,8 @@ class ArchiveDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 2 * kDefaultPadding),
+        padding: EdgeInsets.symmetric(
+            horizontal: kDefaultPadding, vertical: 2 * kDefaultPadding),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -23,7 +24,8 @@ class ArchiveDetailPage extends StatelessWidget {
                   fit: BoxFit.fitWidth,
                   height: 500,
                   imageUrl: plant.imageURL,
-                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
               ),
               Expanded(
@@ -32,7 +34,8 @@ class ArchiveDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 0.5 * kDefaultPadding),
+                        padding: const EdgeInsets.only(
+                            bottom: 0.5 * kDefaultPadding),
                         child: Text(
                           plant.name,
                           style: TextStyle(
@@ -45,34 +48,33 @@ class ArchiveDetailPage extends StatelessWidget {
                   ),
                 ),
               )
-            ]
-        ),
+            ]),
       ),
     );
   }
 
-  Widget diseasesList() {
-    return PageView.builder(
-        itemCount: plant.diseases.length,
-        pageSnapping: true,
-        itemBuilder: (context, index){
-          return Container(
-              margin: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(plant.diseases[index].name.toUpperCase()),
-                      Spacer(),
-                      Text(plant.diseases[index].infection_level.toString()),
-                      Icon(Icons.star, color: Colors.red,)
-                    ],
-                  ),
-                  Text(plant.diseases[index].description)
-                ],
-              )
-          );
-        });
-  }
+  // Widget diseasesList() {
+  //   return PageView.builder(
+  //       itemCount: plant.diseases.length,
+  //       pageSnapping: true,
+  //       itemBuilder: (context, index){
+  //         return Container(
+  //             margin: EdgeInsets.all(10),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Row(
+  //                   children: [
+  //                     Text(plant.diseases[index].name.toUpperCase()),
+  //                     Spacer(),
+  //                     Text(plant.diseases[index].infection_level.toString()),
+  //                     Icon(Icons.star, color: Colors.red,)
+  //                   ],
+  //                 ),
+  //                 Text(plant.diseases[index].description)
+  //               ],
+  //             )
+  //         );
+  //       });
+  // }
 }
