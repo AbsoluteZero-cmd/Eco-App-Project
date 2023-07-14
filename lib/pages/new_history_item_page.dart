@@ -7,6 +7,7 @@ import 'package:eco_app_project/yandex_map/location_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../auth/auth.dart';
@@ -21,7 +22,6 @@ class NewHistoryItemPage extends StatefulWidget {
   State<NewHistoryItemPage> createState() => _NewHistoryItemPageState();
 }
 
-
 class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   late XFile? _file;
   late File _image;
@@ -32,12 +32,14 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   String _input_description = '';
   bool _isLoading = false;
   int mPoints = 0;
+  String _status = HistoryItem.statusList[0];
+  int _height = 0;
+  int _age = 0;
 
   final List<XFile>? imagefiles = [];
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _file = widget.image;
     imagefiles!.add(_file!);
@@ -128,61 +130,118 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
         heroTag: "btn2",
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 1.5 * kDefaultPadding),
+        padding: const EdgeInsets.symmetric(
+            horizontal: kDefaultPadding, vertical: 1.5 * kDefaultPadding),
         child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Форма',
-                  style: TextStyle(
-                    fontSize: kFontTitle,
-                    fontWeight: FontWeight.bold,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Форма',
+              style: TextStyle(
+                fontSize: kFontTitle,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Container(
+                padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
+                child: getImagesGrid()),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 0.4 * kDefaultPadding),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Высота (м)',
+                      ),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      onChanged: (value) {
+                        _height = int.parse(value);
+                      },
+                    ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
-                  child: getImagesGrid()
-                ),
-                TextField(
-                  maxLines: 1,
-                  maxLength: 30,
-                  decoration: InputDecoration(
-                    labelText: 'Вид растения',
-                    filled: true,
-                    fillColor: Colors.grey[200],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Возраст (лет)',
+                      ),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      onChanged: (value) {
+                        _age = int.parse(value);
+                      },
+                    ),
                   ),
-                  onChanged: (text) {
-                    _input = text;
-                  },
-                ),
-                TextField(
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: 'Описание болезни',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                  onChanged: (text) {
-                    setState(() {
-                      _input_description = text;
-                    });
-                  },
-                ),
-                _isLoading ? LinearProgressIndicator() : ElevatedButton(
-                  onPressed: uploadData,
-                  child: Text('Загрузить'),
-                )
-              ],
-            )
-        ),
+                ],
+              ),
+            ),
+            DropdownButton(
+              hint: Text('dgdfg'),
+              value: _status,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              items: HistoryItem.statusList.map((String value) {
+                return DropdownMenuItem(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  _status = value!;
+                });
+              },
+            ),
+            TextField(
+              maxLines: 1,
+              maxLength: 30,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Вид растения',
+              ),
+              onChanged: (text) {
+                _input = text;
+              },
+            ),
+            TextField(
+              maxLines: 5,
+              decoration: InputDecoration(
+                labelText: 'Описание болезни',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (text) {
+                setState(() {
+                  _input_description = text;
+                });
+              },
+            ),
+            _isLoading
+                ? LinearProgressIndicator()
+                : ElevatedButton(
+                    onPressed: uploadData,
+                    child: Text('Загрузить'),
+                  )
+          ],
+        )),
       ),
     );
   }
 
   Future<int> calculatePoints(String plantType) async {
     String name = type_of_plant.split(' ')[0];
-    if(type_of_plant.split(' ').length > 2){
+    if (type_of_plant.split(' ').length > 2) {
       name += '_${type_of_plant.split(' ')[1]}';
     }
     DatabaseReference ref = FirebaseDatabase.instance.ref("plants/$name");
@@ -206,52 +265,64 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
     await ref.update({
       "points": myUser.points + currentPoints,
       "was_today": true,
-      "days_streak" : myUser.was_yesterday ? myUser.days_streak + 1 : 1,
+      "days_streak": myUser.was_yesterday ? myUser.days_streak + 1 : 1,
     });
-
 
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     Reference imgRef = FirebaseStorage.instance.ref("history/$uid/${id}");
     List<String> imageUris = [];
-    for(int i = 0; i < imagefiles!.length; i++){
+    for (int i = 0; i < imagefiles!.length; i++) {
       Reference currentRef = imgRef.child(imagefiles![i].name);
       await currentRef.putFile(File(imagefiles![i].path));
       String imageUri = await currentRef.getDownloadURL();
       imageUris.add(imageUri);
     }
 
-
     final currentLocation = await LocationService().getCurrentLocation();
-    final HistoryItem historyItem = HistoryItem(title: _input?.trim() ?? '${id}', date: HistoryItem.getDate(currentDate), imageUris: imageUris, latLong: currentLocation.toString(), points: currentPoints, description: _input_description, id: id);
-    DatabaseReference itemRef = FirebaseDatabase.instance.ref("history/$uid/${id}");
+    final HistoryItem historyItem = HistoryItem(
+        title: _input?.trim() ?? '${id}',
+        date: HistoryItem.getDate(currentDate),
+        imageUris: imageUris,
+        latLong: currentLocation.toString(),
+        points: currentPoints,
+        description: _input_description,
+        id: id,
+        age: _age,
+        height: _height,
+        status: _status);
+    DatabaseReference itemRef =
+        FirebaseDatabase.instance.ref("history/$uid/${id}");
     await itemRef.set(historyItem.toMap());
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Navigation()));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Navigation()));
   }
 
-  Widget getImagesGrid(){
+  Widget getImagesGrid() {
     return SizedBox(
       height: 220,
       width: double.infinity,
       child: SingleChildScrollView(
-        child: imagefiles != null ? Wrap(
-          alignment: WrapAlignment.spaceBetween,
-          runAlignment: WrapAlignment.spaceBetween,
-          children: imagefiles!.map((image){
-            return Card(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                padding: EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: AspectRatio(
-                    aspectRatio: 7 / 9,
-                    child: Image.file(File(image.path))),
-              ),
-            );
-          }).toList(),
-        ):Container(),
+        child: imagefiles != null
+            ? Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                runAlignment: WrapAlignment.spaceBetween,
+                children: imagefiles!.map((image) {
+                  return Card(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      padding: EdgeInsets.all(3.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: AspectRatio(
+                          aspectRatio: 7 / 9,
+                          child: Image.file(File(image.path))),
+                    ),
+                  );
+                }).toList(),
+              )
+            : Container(),
       ),
     );
   }
@@ -259,7 +330,7 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
   Future<void> addNewImage() async {
     XFile? newImage = await ImagePicker().pickImage(source: ImageSource.camera);
 
-    if(newImage == null) return;
+    if (newImage == null) return;
 
     setState(() {
       imagefiles!.add(newImage);
