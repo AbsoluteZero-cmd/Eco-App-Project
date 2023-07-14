@@ -31,6 +31,25 @@ class _MapScreenState extends State<MapScreen> {
   PlacemarkMapObject getPlacemarkMapObject(HistoryItem historyItem) {
     double lat = historyItem.getLatLong().lat;
     double long = historyItem.getLatLong().long;
+    Color _chipColor, _labelColor;
+
+    switch (historyItem.status) {
+      case 'Больное':
+        _chipColor = Colors.red;
+        _labelColor = Colors.white;
+        break;
+      case 'Аварийное':
+        _chipColor = Colors.yellow;
+        _labelColor = Colors.black;
+        break;
+      case 'Здоровое':
+        _chipColor = Colors.green;
+        _labelColor = Colors.white;
+        break;
+      default:
+        _chipColor = Colors.grey;
+        _labelColor = Colors.black;
+    }
 
     return PlacemarkMapObject(
       mapId: MapObjectId(lat.toString() + long.toString()),
@@ -54,16 +73,18 @@ class _MapScreenState extends State<MapScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(historyItem.title,
-                          style: TextStyle(fontSize: kFontTitle * 0.8)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(historyItem.title,
+                            style: TextStyle(fontSize: kFontTitle * 0.8)),
+                      ),
                       ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: historyItem.imageUris.length > 0
                               ? SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.4,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.9,
+                                  width: MediaQuery.of(context).size.width,
                                   child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
@@ -72,7 +93,8 @@ class _MapScreenState extends State<MapScreen> {
                                           return Container(
                                             padding:
                                                 EdgeInsetsDirectional.symmetric(
-                                                    horizontal: 10.0),
+                                                    horizontal:
+                                                        kDefaultPadding),
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
@@ -81,25 +103,38 @@ class _MapScreenState extends State<MapScreen> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(10)),
                                             ),
-                                            child: AspectRatio(
-                                              aspectRatio: 5 / 7,
-                                              child: CachedNetworkImage(
-                                                imageUrl: imageUri,
-                                                placeholder: (context, url) =>
-                                                    SizedBox(
-                                                        height: 50,
-                                                        width: 50,
-                                                        child: Center(
-                                                            child:
-                                                                CircularProgressIndicator())),
-                                              ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: imageUri,
+                                              placeholder: (context, url) =>
+                                                  SizedBox(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: Center(
+                                                          child:
+                                                              CircularProgressIndicator())),
                                             ),
                                           );
                                         }).toList(),
                                       )),
                                 )
                               : CircularProgressIndicator()),
-                      Text('Описание болезни: ${historyItem.description}'),
+                      Wrap(
+                        alignment: WrapAlignment.spaceAround,
+                        children: [
+                          Chip(label: Text('${historyItem.age} лет')),
+                          Chip(label: Text('${historyItem.height} метров')),
+                          Chip(
+                            label: Text(historyItem.status),
+                            labelStyle: TextStyle(color: _labelColor),
+                            backgroundColor: _chipColor,
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: kDefaultPadding * 0.5),
+                        child: Text(historyItem.description),
+                      ),
                       Text(
                         historyItem.date,
                         style: TextStyle(

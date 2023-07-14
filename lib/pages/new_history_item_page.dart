@@ -189,7 +189,6 @@ class _NewHistoryItemPageState extends State<NewHistoryItemPage> {
               ),
             ),
             DropdownButton(
-              hint: Text('dgdfg'),
               value: _status,
               icon: const Icon(Icons.keyboard_arrow_down),
               items: HistoryItem.statusList.map((String value) {

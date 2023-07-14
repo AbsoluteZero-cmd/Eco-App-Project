@@ -5,6 +5,7 @@ import 'package:eco_app_project/auth/auth.dart';
 import 'package:eco_app_project/auth/user_model.dart';
 import 'package:eco_app_project/constants.dart';
 import 'package:eco_app_project/pages/history_item_edit_page.dart';
+import 'package:eco_app_project/yandex_map/app_lat_long.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -61,6 +62,19 @@ class _HomePageState extends State<HomePage> {
       historyItem.imageUris.addAll(strings);
       list.add(historyItem);
     }
+    // list.add(HistoryItem(
+    //     title: 'title',
+    //     imageUris: [
+    //       'https://firebasestorage.googleapis.com/v0/b/ecoapp-1b718.appspot.com/o/history%2FFK35xliYGRbccOH9iSD5ZYfpUZn2%2F1689240736552%2Faf9deade-95d1-4c96-abea-9822d3b08f579212873894571622583.jpg?alt=media&token=2ad4c8a1-dc6c-4dac-a8f2-7c8d1d10e750'
+    //     ],
+    //     latLong: '36.4219983 -123.084',
+    //     date: 'Thursday, Jul 13, 2023',
+    //     points: 100,
+    //     description: 'description',
+    //     id: '11111111',
+    //     age: 23,
+    //     height: 34,
+    //     status: 'Больное'));
 
     historyItems = list;
     print('my history: ${historyItems}');
@@ -82,6 +96,25 @@ class _HomePageState extends State<HomePage> {
       BuildContext context, HistoryItem historyItem, int index) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    Color _chipColor, _labelColor;
+
+    switch (historyItem.status) {
+      case 'Больное':
+        _chipColor = Colors.red;
+        _labelColor = Colors.white;
+        break;
+      case 'Аварийное':
+        _chipColor = Colors.yellow;
+        _labelColor = Colors.black;
+        break;
+      case 'Здоровое':
+        _chipColor = Colors.green;
+        _labelColor = Colors.white;
+        break;
+      default:
+        _chipColor = Colors.grey;
+        _labelColor = Colors.black;
+    }
 
     return SizedBox(
       width: width * 0.8,
@@ -89,110 +122,105 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Card(
           margin: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: kDefaultPadding * 0.2,
-                  horizontal: kDefaultPadding * 0.2),
-              child: Stack(
+          shape: LinearBorder(),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      historyItem.imageUris.length > 0
-                          ? SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              width: double.infinity,
-                              child: SingleChildScrollView(
-                                  child: Wrap(
-                                alignment: WrapAlignment.spaceBetween,
-                                runAlignment: WrapAlignment.spaceBetween,
-                                children: historyItem.imageUris.map((imageUri) {
-                                  return Container(
-                                    padding: EdgeInsets.all(3.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    child: AspectRatio(
-                                      aspectRatio: 5 / 7,
-                                      child: CachedNetworkImage(
-                                        imageUrl: imageUri,
-                                        placeholder: (context, url) => SizedBox(
-                                            height: 50,
-                                            width: 50,
-                                            child: Center(
-                                                child:
-                                                    CircularProgressIndicator())),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              )),
-                            )
-                          : CircularProgressIndicator(),
-                      DefaultTextStyle(
-                        style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
-                            fontFamily: 'Montserrat'),
-                        child: Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: kDefaultPadding, horizontal: 0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  historyItem.title.toUpperCase(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: kFontTitle,
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 2,
-                                ),
-                                Text(
-                                  historyItem.date,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
-                                Text('Points: ${historyItem.points}',
-                                    overflow: TextOverflow.ellipsis),
-                              ],
+                  historyItem.imageUris.length > 0
+                      ? SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: SingleChildScrollView(
+                              child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            runAlignment: WrapAlignment.spaceBetween,
+                            children: historyItem.imageUris.map((imageUri) {
+                              return CachedNetworkImage(
+                                imageUrl: imageUri,
+                                placeholder: (context, url) => SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Center(
+                                        child: CircularProgressIndicator())),
+                              );
+                            }).toList(),
+                          )),
+                        )
+                      : CircularProgressIndicator(),
+                  DefaultTextStyle(
+                    style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.grey,
+                        fontFamily: 'Montserrat'),
+                    child: Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: kDefaultPadding, horizontal: 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              historyItem.title.toUpperCase(),
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: kFontTitle,
+                                  fontWeight: FontWeight.bold),
+                              maxLines: 2,
                             ),
-                          ),
+                            Text(
+                              historyItem.date,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                            Text('Очки: ${historyItem.points}',
+                                overflow: TextOverflow.ellipsis),
+                          ],
                         ),
-                      )
-                    ],
-                  ),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          HistoryItemEditPage(
-                                            historyItem: historyItem,
-                                          )));
-                            },
-                            icon: Icon(Icons.edit),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              await deleteHistoryItem(historyItem.id, index);
-                            },
-                            icon: Icon(Icons.delete),
-                          ),
-                        ],
-                      ))
+                      ),
+                    ),
+                  )
                 ],
-              )),
+              ),
+              Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      HistoryItemEditPage(
+                                        historyItem: historyItem,
+                                      )));
+                        },
+                        icon: Icon(Icons.edit),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await deleteHistoryItem(historyItem.id, index);
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
+                  )),
+              Positioned(
+                child: Chip(
+                  label: Text(historyItem.status),
+                  labelStyle: TextStyle(color: _labelColor),
+                  backgroundColor: _chipColor,
+                ),
+                top: 5,
+                left: 10,
+              )
+            ],
+          ),
         ),
       ),
     );
