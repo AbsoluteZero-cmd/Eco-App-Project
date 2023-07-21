@@ -50,12 +50,12 @@
 
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Доступ к геолокации пользователя необходим для отображения текущей геопозиции</string>
-
+    
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>Доступ к галерее фотографий/string>
+    <string>Access to images gallery to run the app</string>
+    
     <key>NSCameraUsageDescription</key>
-    <string>Доступ к камере для создания фотографий</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Доступ к микрофону, не используется и необходим для работы камеры</string>
+    <string>Access to phone's camera to take pictures of ill plants</string>
+    
 </dict>
 </plist>
