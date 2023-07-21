@@ -240,7 +240,7 @@ class _HomePageState extends State<HomePage> {
               return Column(
                 children: [
                   Container(
-                    height: height * 0.35,
+                    height: height * 0.3,
                     width: width,
                     decoration: const BoxDecoration(
                       color: kPrimaryColor,
@@ -357,9 +357,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: height * 0.55,
-                    width: width,
+                  Expanded(
                     child: historyItems.isNotEmpty
                         ? ListView.builder(
                             itemCount: historyItems.length,

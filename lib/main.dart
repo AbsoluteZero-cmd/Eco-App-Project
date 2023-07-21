@@ -9,7 +9,6 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
         stream: Auth().authStateChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Navigation();
+            return Container(child: SafeArea(child: Navigation()), color: Colors.transparent);
           } else {
             return const LoginPage();
           }
