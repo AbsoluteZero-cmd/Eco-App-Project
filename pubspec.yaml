@@ -46,7 +46,7 @@ dependencies:
   firebase_storage: ^11.1.0
 
   image_picker: ^0.8.7
-  tflite: ^1.1.1
+#  tflite: ^1.1.1
   meta: ^1.1.8
 
   fluttertoast: ^8.2.1
